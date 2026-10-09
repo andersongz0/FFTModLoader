@@ -6,7 +6,7 @@ Author: **ZeroDS** · [Source and releases](https://github.com/andersongz0/FFTMo
 
 FFTModLoader loads compatible mods into **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)** on Windows. It starts the game with the bundled runtime, resolves mod dependencies and provides integrated expansions for additional jobs, items, abilities, menus, shops and AI support.
 
-Installing the loader alone does not change the game's jobs or items: that content comes from the mods you choose to install.
+**GenericJobs is built into FFTModLoader** and makes **Dark Knight** and **Onion Knight** available as generic jobs. **Holy Knight** and **Rune Knight** are added separately by Generic Knights. Additional items and Chemist changes come from Reworked Chemist.
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Installing the loader alone does not change the game's jobs or items: that conte
 ## FFTModLoader Installation Guide
 
 1. Close the game. Close the loader too if it is already installed and running.
-2. Download **FFTModLoader-0.11.7-rc.3.zip** from [release Assets](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.3), not **Source code**.
+2. Download **FFTModLoader-0.11.7-rc.4.zip** from [release Assets](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.4), not **Source code**.
 3. Extract the ZIP to a separate folder outside the game installation.
 4. Double-click **Install.cmd** and choose your language.
 5. Check the detected folder and type **YES** to confirm. If several installations are found, choose one; if none is found, enter the path to **FFT_enhanced.exe** or its folder.
@@ -35,7 +35,7 @@ Both are part of the loader, not separate user-installed mods:
 - `FFTModLoader.Runtime/InternalMods/JobExpansion`: job slots, job commands and visual resource routing.
 - `FFTModLoader.Runtime/InternalMods/ContentExpansion`: item/ability/formula tables, inventory and save infrastructure, native bridge, menus, shops and AI routes.
 
-Expansion functionality is activated by a compatible consuming mod; installing the loader alone does not enable that mod's content.
+JobExpansion activates the built-in GenericJobs classes and any jobs registered by compatible mods. ContentExpansion enables additional gameplay only when requested by a compatible mod.
 
 
 See [verification details](VERIFICATION.md) for the supported executable.

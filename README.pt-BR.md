@@ -6,7 +6,7 @@ Autor: **ZeroDS** · [Código-fonte e releases](https://github.com/andersongz0/F
 
 FFTModLoader carrega mods compatíveis em **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)** no Windows. Ele inicia o jogo com o runtime incluído, organiza as dependências dos mods e oferece expansões integradas para novas classes, itens, habilidades, menus, lojas e suporte à IA.
 
-Instalar somente o loader não altera as classes ou os itens do jogo: esse conteúdo vem dos mods que você escolher instalar.
+**O GenericJobs faz parte do FFTModLoader** e disponibiliza **Dark Knight** e **Onion Knight** como classes genéricas. **Holy Knight** e **Rune Knight** são adicionadas separadamente pelo Generic Knights. Os novos itens e as mudanças do Chemist vêm do Reworked Chemist.
 
 ## Requisitos
 
@@ -16,7 +16,7 @@ Instalar somente o loader não altera as classes ou os itens do jogo: esse conte
 ## Guia de Instalação do FFTModLoader
 
 1. Feche o jogo. Feche também o loader, caso já esteja instalado e aberto.
-2. Baixe **FFTModLoader-0.11.7-rc.3.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.3), não **Source code**.
+2. Baixe **FFTModLoader-0.11.7-rc.4.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.4), não **Source code**.
 3. Extraia o ZIP em uma pasta separada, fora da instalação do jogo.
 4. Dê dois cliques em **Install.cmd** e escolha o idioma.
 5. Confira a pasta encontrada e digite **SIM** para confirmar. Se houver várias instalações, escolha uma; se nenhuma for encontrada, informe o caminho de **FFT_enhanced.exe** ou da pasta que o contém.
@@ -35,7 +35,7 @@ As duas fazem parte do loader, sem instalação separada:
 - `FFTModLoader.Runtime/InternalMods/JobExpansion`: classes, comandos e roteamento dos recursos visuais extras.
 - `FFTModLoader.Runtime/InternalMods/ContentExpansion`: tabelas de itens/habilidades/fórmulas, inventário, saves, bridge nativo, menus, lojas e rotas da IA.
 
-As funções das expansões são ativadas por um mod consumidor compatível; instalar somente o loader não ativa o conteúdo desse mod.
+O JobExpansion ativa as classes do GenericJobs incluído e as classes registradas por mods compatíveis. O ContentExpansion só ativa conteúdo adicional quando solicitado por um mod compatível.
 
 
 Consulte [os detalhes de verificação](VERIFICATION.md) para o executável suportado.

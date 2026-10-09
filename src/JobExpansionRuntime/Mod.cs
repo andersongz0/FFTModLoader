@@ -190,8 +190,9 @@ namespace GenericJobs
                 _logger.WriteLine($"[{_modConfig.ModId}] [ExpansionConfig] Validated capacities: menu={_expansion.MaxExtraJobs} (configured={_extraJobs.Length}), sprites={_expansion.MaxNewSpriteSets} new sets (total shapes={_expansion.ShapeCapacity}). Restart the game after changing JSON.");
                 _logger.WriteLine($"[{_modConfig.ModId}] Loaded {_extraJobs.Length} extra jobs");
 
-                // Loading infrastructure alone must preserve native gameplay.
-                // Chemist needs sparse table lookup but not the class menu hooks.
+                // A host with no registered jobs must not create menu slots.
+                // The bundled GenericJobs always registers Dark/Onion; external
+                // hosts can use Chemist's sparse lookup without job-menu hooks.
                 if (_registeredJobs.Length == 0 &&
                     !enabledMods.Contains("ffttic.tests.reworkedchemist.venom"))
                 {
