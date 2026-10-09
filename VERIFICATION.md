@@ -2,6 +2,8 @@
 
 ## English
 
+rc.5 adds a canonical Reworked Chemist ID (`ffttic.jobs.reworkedchemist`), translates old consumer/dependency IDs in the generated view, and uses deterministic dependency-first ordering. The console shows component names in the same order written to the runtime configuration. Older Generic Knights packages receive their missing JobExpansion dependency in this generated view only. Original third-party files and expanded saves are not rewritten. Checks cover old-to-new installations, duplicate aliases, missing dependencies, cycles and order stability.
+
 The rc.4 loader restores GenericJobs as built-in loader content. Dark Knight (160 / A0) and Onion Knight (161 / A1) are always registered by the bundled GenericJobs. Only Holy Knight (162 / A2) and Rune Knight (163 / A3) depend on Generic Knights. This corrects rc.3, which incorrectly disabled the built-in classes together with the absent Knights classes. Existing Generic Knights and Reworked Chemist rc.2 packages remain compatible without reinstalling them.
 
 Job registrations use `FFTModLoader.jobs.json` with `SchemaVersion: 1` and a numeric `JobIds` array (160–255). The resolved view registers A0/A1 for GenericJobs and supplies backward-compatible A2/A3 registration for the existing Generic Knights package. GenericJobs gameplay resources are always available; only its original DLL is suppressed because JobExpansion owns the hooks. Original third-party files remain unchanged.
@@ -16,6 +18,8 @@ Supported Enhanced executable SHA-256:
 `937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5`.
 
 ## Português
+
+O rc.5 usa o ID definitivo do Reworked Chemist (`ffttic.jobs.reworkedchemist`), traduz os IDs antigos de mods/dependências na cópia de execução e aplica uma ordem determinística com dependências primeiro. O console mostra os nomes dos componentes na mesma ordem gravada na configuração do runtime. Pacotes antigos do Generic Knights recebem o vínculo com JobExpansion somente nessa cópia gerada. Arquivos originais de terceiros e saves expandidos não são reescritos. As verificações cobrem atualização antiga/nova, aliases duplicados, dependências ausentes, ciclos e estabilidade da ordem.
 
 O loader rc.4 restaura o GenericJobs como conteúdo integrado ao loader. Dark Knight (160 / A0) e Onion Knight (161 / A1) são sempre registradas pelo GenericJobs incluído. Apenas Holy Knight (162 / A2) e Rune Knight (163 / A3) dependem do Generic Knights. Isso corrige o rc.3, que desativou indevidamente as classes integradas junto das classes ausentes do Knights. Os pacotes existentes Generic Knights e Reworked Chemist rc.2 permanecem compatíveis, sem reinstalá-los.
 

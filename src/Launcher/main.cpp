@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include "RuntimeLogRelay.h"
+#include "ModLoadOrder.h"
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
@@ -405,12 +406,6 @@ namespace
         return false;
     }
 
-    struct ModInfo
-    {
-        std::string id;
-        std::vector<std::string> dependencies;
-    };
-
     bool WriteJson(const fs::path& path, const json& value)
     {
         std::error_code error;
@@ -476,7 +471,24 @@ namespace
             return false;
         }
 
-        const std::string id = manifest.value("ModId", "");
+        const std::string id = fftloader::CanonicalModId(manifest.value("ModId", ""));
+        manifest["ModId"] = id;
+        if (id == fftloader::ChemistId) manifest["ModName"] = "Reworked Chemist";
+        for (const char* key : {"ModDependencies", "OptionalDependencies"})
+            if (manifest.contains(key) && manifest[key].is_array())
+                for (auto& dependency : manifest[key])
+                    if (dependency.is_string())
+                        dependency = fftloader::CanonicalModId(dependency.get<std::string>());
+        // Upgrade published consumers in the generated view only. Original
+        // third-party manifests and old user packages remain untouched.
+        if (id == "ffttic.jobs.genericknights")
+        {
+            auto& dependencies = manifest["ModDependencies"];
+            if (dependencies.is_null()) dependencies = json::array();
+            if (!dependencies.is_array()) return false;
+            if (std::find(dependencies.begin(), dependencies.end(), "fftmodloader.jobexpansion") == dependencies.end())
+                dependencies.push_back("fftmodloader.jobexpansion");
+        }
         if (id.empty())
             return true;
 
@@ -677,7 +689,7 @@ namespace
         std::vector<std::string>& sortedMods,
         std::wstring& errorMessage)
     {
-        std::map<std::string, ModInfo> mods;
+        std::map<std::string, fftloader::ModInfo> mods;
         std::error_code error;
 
         if (!fs::exists(modsDirectory))
@@ -717,8 +729,9 @@ namespace
                 if (id.empty())
                     continue;
 
-                ModInfo info;
+                fftloader::ModInfo info;
                 info.id = id;
+                info.library = manifest.value("IsLibrary", false);
 
                 if (manifest.contains("ModDependencies") &&
                     manifest["ModDependencies"].is_array())
@@ -730,7 +743,8 @@ namespace
                     }
                 }
 
-                mods[id] = std::move(info);
+                if (!mods.emplace(id, std::move(info)).second)
+                    throw std::runtime_error("Duplicate mod ID");
             }
             catch (const std::exception& ex)
             {
@@ -739,45 +753,11 @@ namespace
             }
         }
 
-        std::map<std::string, int> state;
-        std::function<bool(const std::string&)> visit =
-            [&](const std::string& id) -> bool
-            {
-                if (state[id] == 2)
-                    return true;
-
-                if (state[id] == 1)
-                {
-                    errorMessage = L"Dependencia circular entre mods.";
-                    return false;
-                }
-
-                state[id] = 1;
-                const ModInfo& mod = mods.at(id);
-
-                for (const std::string& dependency : mod.dependencies)
-                {
-                    if (!mods.contains(dependency))
-                    {
-                        errorMessage = L"Dependencia ausente para o mod " +
-                            std::wstring(id.begin(), id.end()) + L": " +
-                            std::wstring(dependency.begin(), dependency.end());
-                        return false;
-                    }
-
-                    if (!visit(dependency))
-                        return false;
-                }
-
-                state[id] = 2;
-                sortedMods.push_back(id);
-                return true;
-            };
-
-        for (const auto& [id, unused] : mods)
+        std::string errorText;
+        if (!fftloader::SortMods(mods, sortedMods, errorText))
         {
-            if (!visit(id))
-                return false;
+            errorMessage.assign(errorText.begin(), errorText.end());
+            return false;
         }
 
         return true;
@@ -1002,7 +982,7 @@ int wmain(int argc, wchar_t** argv)
         baseDir / L"FFT_enhanced.exe";
 
     std::wcout
-        << L"FFTModLoader 0.11.7-rc.4 - ZeroDS - Runtime independente integrado\n"
+        << L"FFTModLoader 0.11.7-rc.5 - ZeroDS - Runtime independente integrado\n"
         << L"Projeto: https://github.com/andersongz0/FFTModLoader\n";
 
     std::wcout
@@ -1037,10 +1017,19 @@ int wmain(int argc, wchar_t** argv)
 
     std::wcout
         << L"[FFTModLoader] " << sortedMods.size()
-        << L" mods originais encontrados e ordenados.\n";
+        << L" componentes na ordem de carregamento (dependencias antes dos mods):\n";
 
     for (const std::string& id : sortedMods)
-        std::wcout << L"  - " << std::wstring(id.begin(), id.end()) << L"\n";
+    {
+        std::ifstream input(baseDir / L"FFTModLoader.Runtime" / L"ResolvedMods" / id / "ModConfig.json");
+        const json manifest = json::parse(input);
+        const std::string name = manifest.value("ModName", id);
+        const int length = MultiByteToWideChar(CP_UTF8, 0, name.data(), static_cast<int>(name.size()), nullptr, 0);
+        std::wstring wideName(length, L'\0');
+        if (length > 0) MultiByteToWideChar(CP_UTF8, 0, name.data(), static_cast<int>(name.size()), wideName.data(), length);
+        else wideName.assign(id.begin(), id.end());
+        std::wcout << L"  - " << wideName << L"\n";
+    }
 
     if (!SetEnvironmentVariableW(
             L"FFTMODLOADER_RELOADED_CONFIG",

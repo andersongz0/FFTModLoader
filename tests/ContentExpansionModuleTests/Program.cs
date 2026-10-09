@@ -3,7 +3,7 @@ using FFTModLoader.ContentExpansion.Api;
 using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 using Provider = FFTModLoader.ContentExpansion.Module.Startup;
-using Consumer = ReworkedChemist.VenomTest.Startup;
+using Consumer = ReworkedChemist.Startup;
 
 static class Program
 {

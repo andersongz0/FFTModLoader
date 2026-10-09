@@ -69,7 +69,7 @@ if ($project.Name -eq 'ReworkedChemist') {
     if (Test-Path -LiteralPath $legacy) {
         $legacyConfig = Join-Path $legacy 'ModConfig.json'
         if (-not (Test-Path -LiteralPath $legacyConfig -PathType Leaf) -or
-            (Get-Content -LiteralPath $legacyConfig -Raw | ConvertFrom-Json).ModId -ne 'ffttic.tests.reworkedchemist.venom') {
+            (Get-Content -LiteralPath $legacyConfig -Raw | ConvertFrom-Json).ModId -notin @('ffttic.tests.reworkedchemist.venom','ffttic.jobs.reworkedchemist')) {
             throw 'Legacy folder identity could not be verified; no files moved.'
         }
         $legacyBackup = [IO.Path]::GetFullPath((Join-Path $backup 'legacy\Reworked Chemist - Venom Test'))
@@ -78,6 +78,25 @@ if ($project.Name -eq 'ReworkedChemist') {
         New-Item -ItemType Directory -Path (Split-Path $legacyBackup -Parent) -Force | Out-Null
         Move-Item -LiteralPath $legacy -Destination $legacyBackup
         Write-Host ('Legacy mod preserved in backup: ' + $legacyBackup)
+    }
+    $current = [IO.Path]::GetFullPath((Join-Path $game 'Mods\Reworked Chemist'))
+    $currentConfig = Join-Path $current 'ModConfig.json'
+    if (Test-Path -LiteralPath $current) {
+        if (-not (Test-Path -LiteralPath $currentConfig -PathType Leaf) -or
+            (Get-Content -LiteralPath $currentConfig -Raw | ConvertFrom-Json).ModId -notin @('ffttic.tests.reworkedchemist.venom','ffttic.jobs.reworkedchemist')) {
+            throw 'Reworked Chemist folder identity could not be verified; no files overwritten.'
+        }
+        # Retire only the old consumer assembly; the save namespace is unchanged.
+        foreach ($name in @('FFTModLoader.ReworkedChemist.VenomTest.dll','FFTModLoader.ReworkedChemist.VenomTest.deps.json')) {
+            $oldFile = [IO.Path]::GetFullPath((Join-Path $current $name))
+            $oldBackup = [IO.Path]::GetFullPath((Join-Path $backup ('legacy-consumer\' + $name)))
+            if (-not $oldFile.StartsWith($game + '\Mods\Reworked Chemist\', [StringComparison]::OrdinalIgnoreCase) -or
+                -not $oldBackup.StartsWith($backupFull + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe consumer migration path.' }
+            if (Test-Path -LiteralPath $oldFile -PathType Leaf) {
+                New-Item -ItemType Directory -Path (Split-Path $oldBackup -Parent) -Force | Out-Null
+                Move-Item -LiteralPath $oldFile -Destination $oldBackup
+            }
+        }
     }
 }
 foreach ($file in $files) {

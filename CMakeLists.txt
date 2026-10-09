@@ -25,6 +25,7 @@ add_executable(FFTModLoader
     src/Launcher/FFTModLoader.rc
 )
 add_executable(RuntimeLogRelayTests EXCLUDE_FROM_ALL tests/runtime_log_relay.cpp)
+add_executable(ModLoadOrderTests EXCLUDE_FROM_ALL tests/mod_load_order.cpp)
 
 target_include_directories(FFTModLoader PRIVATE
     src/Launcher

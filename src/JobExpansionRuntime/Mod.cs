@@ -194,6 +194,7 @@ namespace GenericJobs
                 // The bundled GenericJobs always registers Dark/Onion; external
                 // hosts can use Chemist's sparse lookup without job-menu hooks.
                 if (_registeredJobs.Length == 0 &&
+                    !enabledMods.Contains("ffttic.jobs.reworkedchemist") &&
                     !enabledMods.Contains("ffttic.tests.reworkedchemist.venom"))
                 {
                     _logger.WriteLine($"[{_modConfig.ModId}] Dormant: no expansion consumer; original job menu preserved.");
