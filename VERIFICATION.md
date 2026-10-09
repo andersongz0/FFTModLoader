@@ -2,6 +2,8 @@
 
 ## English
 
+rc.6 corrects the JobExpansion callback at Enhanced RVA 28A6E8: it returns the native integer ability count instead of discarding it through a void delegate. The non-equipped-job Learn route (2BA1FC) uses that count; the equipped-job route uses a different helper (28A770). The actual callback is exercised across 9,721 native-ABI fixture calls covering job IDs, action/passive categories, modes, empty/nonempty lists, native rows/terminators and the existing Dark Knight remap. No equipped job, learning bits or save is changed by this hook. The user's video demonstrates the old failure; this build still requires their in-game confirmation. Existing Generic Knights and Reworked Chemist rc.3 packages do not need to be reinstalled.
+
 rc.5 adds a canonical Reworked Chemist ID (`ffttic.jobs.reworkedchemist`), translates old consumer/dependency IDs in the generated view, and uses deterministic dependency-first ordering. The console shows component names in the same order written to the runtime configuration. Older Generic Knights packages receive their missing JobExpansion dependency in this generated view only. Original third-party files and expanded saves are not rewritten. Checks cover old-to-new installations, duplicate aliases, missing dependencies, cycles and order stability.
 
 The rc.4 loader restores GenericJobs as built-in loader content. Dark Knight (160 / A0) and Onion Knight (161 / A1) are always registered by the bundled GenericJobs. Only Holy Knight (162 / A2) and Rune Knight (163 / A3) depend on Generic Knights. This corrects rc.3, which incorrectly disabled the built-in classes together with the absent Knights classes. Existing Generic Knights and Reworked Chemist rc.2 packages remain compatible without reinstalling them.
@@ -18,6 +20,8 @@ Supported Enhanced executable SHA-256:
 `937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5`.
 
 ## Português
+
+O rc.6 corrige o callback do JobExpansion no RVA Enhanced 28A6E8: ele passa a retornar a quantidade nativa de habilidades, antes descartada por um delegate sem retorno. O Learn de uma classe não equipada (2BA1FC) usa essa quantidade; a classe equipada usa outro helper (28A770). O callback real passou por 9.721 chamadas de teste na ABI nativa, cobrindo classes, categorias de ação/passivas, modos, listas vazias/preenchidas, linhas/terminadores nativos e a compatibilidade do Dark Knight. Esse hook não altera a classe equipada, habilidades aprendidas ou saves. O vídeo do usuário demonstra o erro anterior; esta compilação ainda requer sua confirmação dentro do jogo. Os pacotes Generic Knights e Reworked Chemist rc.3 continuam compatíveis sem reinstalação.
 
 O rc.5 usa o ID definitivo do Reworked Chemist (`ffttic.jobs.reworkedchemist`), traduz os IDs antigos de mods/dependências na cópia de execução e aplica uma ordem determinística com dependências primeiro. O console mostra os nomes dos componentes na mesma ordem gravada na configuração do runtime. Pacotes antigos do Generic Knights recebem o vínculo com JobExpansion somente nessa cópia gerada. Arquivos originais de terceiros e saves expandidos não são reescritos. As verificações cobrem atualização antiga/nova, aliases duplicados, dependências ausentes, ciclos e estabilidade da ordem.
 

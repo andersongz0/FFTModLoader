@@ -64,7 +64,8 @@ namespace GenericJobs
         private IHook<SetJobRequirementNameDelegate>? _setJobRequirementName;
         private IHook<HandleJobMenuClickDelegate>? _handleJobMenuClick;
         private IHook<HandleJobMenuStateDelegate>? _handleJobMenuState;
-        private IHook<Sub286634Delegate>? _sub286634;
+        private IHook<JobAbilityListDelegate>? _jobAbilityList;
+        private JobAbilityListDelegate? _jobAbilityListOriginal;
         private IHook<StartEffectDelegate>? _startEffect;
         private IHook<HandleTeleportAnimationDelegate>? _handleTeleportAnimation;
         private IHook<LoadG2DDelegate>? _loadG2D;
@@ -118,7 +119,10 @@ namespace GenericJobs
         private delegate void HandleJobMenuStateDelegate(nint a1, nint a2, uint a3, int a4, int a5);
 
         [Function(CallingConventions.Microsoft)]
-        private delegate void Sub286634Delegate(short a1, ushort jobId, int a3, nint a4, int a5);
+        // Enhanced RVA 28A6E8 tail-returns the count from 28A474. Learn's
+        // non-equipped-job route uses this count to construct its visible list.
+        // A void hook discards it even though the native output was populated.
+        private delegate int JobAbilityListDelegate(short unit, ushort jobId, int category, nint output, int mode);
 
         [Function(CallingConventions.Microsoft)]
         private delegate void StartEffectDelegate(uint a1, uint a2, nint a3);
@@ -336,7 +340,7 @@ namespace GenericJobs
                 ),
                 ["DK_RSMFixup1"] = (
                     "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 8B 74 24",
-                    e => InstallMenuHook(ref _sub286634, Sub286634Hook, (long)_gameBase + e.Offset)
+                    e => InstallJobAbilityListHook((long)_gameBase + e.Offset)
                 ),
                 ["DK_RSMFixup2"] = (
                     "83 FB ?? 7C ?? BB",
@@ -762,7 +766,15 @@ namespace GenericJobs
             }
         }
 
-        private unsafe void Sub286634Hook(short a1, ushort jobId, int a3, nint a4, int a5)
+        private void InstallJobAbilityListHook(long address)
+        {
+            _jobAbilityList = _hooks!.CreateHook<JobAbilityListDelegate>(JobAbilityListHook, address);
+            _jobAbilityListOriginal = _jobAbilityList.OriginalFunction;
+            // Publish both owner and original delegate before activation.
+            _jobAbilityList.Activate();
+        }
+
+        private unsafe int JobAbilityListHook(short unit, ushort jobId, int category, nint output, int mode)
         {
             ushort* joblist = (ushort*)(_jobList);
 
@@ -771,7 +783,7 @@ namespace GenericJobs
             if (joblist != null && joblist[0] != 0x5E && jobId == 0x5E)
                 jobId = 0xA0;
 
-            _sub286634!.OriginalFunction(a1, jobId, a3, a4, a5);
+            return _jobAbilityListOriginal!(unit, jobId, category, output, mode);
         }
 
         private unsafe int HandleTeleportAnimationHook(nint a1)
