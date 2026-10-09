@@ -1,0 +1,63 @@
+{
+  "ModId": "fftmodloader.jobexpansion",
+  "ModName": "FFTModLoader Job Expansion Runtime",
+  "ModAuthor": "ZeroDS",
+  "ProjectUrl": "https://github.com/andersongz0/FFTModLoader",
+  "ModVersion": "0.2.7",
+  "ModDescription": "Loader-owned generic job and visual-resource expansion. Preserves the original GenericJobs mod.",
+  "ModDll": "FFTModLoader.JobExpansion.dll",
+  "ModIcon": "Preview.png",
+  "ModR2RManagedDll32": "x86/FFTModLoader.JobExpansion.dll",
+  "ModR2RManagedDll64": "x64/FFTModLoader.JobExpansion.dll",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "",
+  "Tags": [],
+  "CanUnload": false,
+  "HasExports": false,
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "FFTModLoader.JobExpansion.ReleaseMetadata.json",
+  "PluginData": {
+    "GitHubDependencies": {
+      "IdToConfigMap": {
+        "fftivc.utility.modloader": {
+          "Config": {
+            "UserName": "Nenkai",
+            "RepositoryName": "fftivc.utility.modloader",
+            "UseReleaseTag": true,
+            "AssetFileName": "Mod.zip"
+          },
+          "ReleaseMetadataName": "fftivc.utility.modloader.ReleaseMetadata.json"
+        },
+        "Reloaded.Memory.SigScan.ReloadedII": {
+          "Config": {
+            "UserName": "Reloaded-Project",
+            "RepositoryName": "Reloaded.Memory.SigScan",
+            "UseReleaseTag": false,
+            "AssetFileName": "Mod.zip"
+          },
+          "ReleaseMetadataName": "Reloaded.Memory.SigScan.ReloadedII.ReleaseMetadata.json"
+        },
+        "reloaded.sharedlib.hooks": {
+          "Config": {
+            "UserName": "Sewer56",
+            "RepositoryName": "Reloaded.SharedLib.Hooks.ReloadedII",
+            "UseReleaseTag": true,
+            "AssetFileName": "reloaded.sharedlib.hooks.zip"
+          },
+          "ReleaseMetadataName": "Sewer56.Update.ReleaseMetadata.json"
+        }
+      }
+    }
+  },
+  "IsUniversalMod": false,
+  "ModDependencies": [
+    "fftivc.utility.modloader",
+    "ffttic.jobs.genericjobs",
+    "Reloaded.Memory.SigScan.ReloadedII",
+    "reloaded.sharedlib.hooks"
+  ],
+  "OptionalDependencies": [],
+  "SupportedAppId": [
+    "fft_enhanced.exe"
+  ]
+}

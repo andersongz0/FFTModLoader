@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <HooksRuntimeDirectory Condition="'$(HooksRuntimeDirectory)' == ''">C:/Program Files (x86)/Steam/steamapps/common/FINAL FANTASY TACTICS - The Ivalice Chronicles/FFTModLoader.Runtime/ResolvedMods/reloaded.sharedlib.hooks/x64</HooksRuntimeDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Test the ACTUAL installed hook library, isolated from the game's
+         process and from older NuGet hook interfaces used by other tests. -->
+    <Reference Include="Reloaded.Hooks" HintPath="$(HooksRuntimeDirectory)/Reloaded.Hooks.dll" />
+    <Reference Include="Reloaded.Hooks.Definitions" HintPath="$(HooksRuntimeDirectory)/Reloaded.Hooks.Definitions.dll" />
+    <Reference Include="Iced" HintPath="$(HooksRuntimeDirectory)/Iced.dll" />
+    <None Include="$(HooksRuntimeDirectory)/*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeItemStockLeaf.cs" Link="NativeItemStockLeaf.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeShopListAppend.cs" Link="NativeShopListAppend.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeItemCommonLeaf.cs" Link="NativeItemCommonLeaf.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeMedicineCatalog.cs" Link="NativeMedicineCatalog.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeAbilityCatalog.cs" Link="NativeAbilityCatalog.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeCommandCatalog.cs" Link="NativeCommandCatalog.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeActionListRoute.cs" Link="NativeActionListRoute.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeActionPurchaseRoute.cs" Link="NativeActionPurchaseRoute.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeContextBridge.cs" Link="NativeContextBridge.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/NativeLifetimeMemory.cs" Link="NativeLifetimeMemory.cs" />
+    <Compile Include="../../src/ContentExpansionRuntime/CheckedNativeRead.cs" Link="CheckedNativeRead.cs" />
+    <Compile Include="../../src/ContentExpansionCore/NativeActionMenu.cs" Link="NativeActionMenu.cs" />
+    <Compile Include="../../src/ContentExpansionCore/ExpandedSaveJson.cs" Link="ExpandedSaveJson.cs" />
+    <Compile Include="../../src/ContentExpansionCore/ExpandedSaveState.cs" Link="ExpandedSaveState.cs" />
+    <Compile Include="../../src/ContentExpansionCore/ExpandedSaveStore.cs" Link="ExpandedSaveStore.cs" />
+    <Compile Include="../../src/ContentExpansionCore/InventoryLedger.cs" Link="InventoryLedger.cs" />
+  </ItemGroup>
+</Project>

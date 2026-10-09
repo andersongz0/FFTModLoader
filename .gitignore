@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/__pycache__/
+**/build*/
+**/Logs/
+**/ExpandedSaves/
+**/ResolvedMods/
+**/.vs/
+*.pdb
+*.dmp
+*.log
+*.zip
+*.user
+.env*

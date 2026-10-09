@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/JobExpansionRuntime/SparseNxdRows.cs" Link="SparseNxdRows.cs" />
+    <Compile Include="../../src/JobExpansionRuntime/SessionContentLog.cs" Link="SessionContentLog.cs" />
+    <Compile Include="../../src/JobExpansionRuntime/MenuPortraitPolicy.cs" Link="MenuPortraitPolicy.cs" />
+    <Compile Include="../../src/JobExpansionRuntime/MenuPreviewPolicy.cs" Link="MenuPreviewPolicy.cs" />
+    <Compile Include="../../src/JobExpansionRuntime/ExpansionSettings.cs" Link="ExpansionSettings.cs" />
+    <Compile Include="../../src/JobExpansionRuntime/ModDirectoryResolver.cs" Link="ModDirectoryResolver.cs" />
+  </ItemGroup>
+</Project>

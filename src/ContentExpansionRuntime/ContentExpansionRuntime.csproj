@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>FFTModLoader.ContentExpansion.Runtime</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ContentExpansionCore/ContentExpansionCore.csproj" />
+    <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
+  </ItemGroup>
+</Project>
