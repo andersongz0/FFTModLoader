@@ -35,9 +35,3 @@ Integração original dos mods e loader: **ZeroDS**. Autoria de terceiros preser
 Ferramentas de desenvolvimento não são necessariamente dependências de execução: para jogar, bastam os pacotes de release e a instalação legítima do jogo.
 FINAL FANTASY TACTICS e seus recursos originais pertencem aos respectivos proprietários.
 Arte de terceiros não é relicenciada como código original de ZeroDS. Consulte a tabela e `SPRITE_CREDITS.json` de Generic Knights.
-
-## Política de publicação
-
-Só publicar um **novo mod** quando o usuário decidir explicitamente que está finalizado.
-Compilar, solicitar teste ou executar uma rotina não autoriza publicar novos mods inacabados.
-Atualizações dos projetos já finalizados podem ser candidatas de teste claramente identificadas; não marcar aprovação de gameplay antes do teste do usuário.

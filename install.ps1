@@ -15,8 +15,8 @@ $project = Get-Content -LiteralPath (Join-Path $source 'PROJECT.json') -Raw | Co
 if (-not (Test-Path -LiteralPath (Join-Path $source 'SHA256SUMS.json') -PathType Leaf)) {
     throw 'Missing package integrity manifest. Download and extract the release ZIP.'
 }
+$manifest = Get-Content -LiteralPath (Join-Path $source 'SHA256SUMS.json') -Raw | ConvertFrom-Json
 {
-    $manifest = Get-Content -LiteralPath (Join-Path $source 'SHA256SUMS.json') -Raw | ConvertFrom-Json
     foreach ($entry in $manifest.PSObject.Properties) {
         $inputFile = [IO.Path]::GetFullPath((Join-Path $source $entry.Name))
         if (-not $inputFile.StartsWith($source + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe manifest path.' }
@@ -36,6 +36,27 @@ $files = Get-ChildItem -LiteralPath $source -Recurse -File | Where-Object {
     $relative = $_.FullName.Substring($source.Length + 1)
     $relative.StartsWith('Mods\') -or $relative.StartsWith('FFTModLoader.Runtime\') -or
     ($_.DirectoryName -eq $source -and ($_.Extension -eq '.dll' -or $_.Name -eq 'FFTModLoader.exe' -or $_.Name -eq 'FFTModLoader.config.json'))
+}
+foreach ($file in $files) {
+    $relative = $file.FullName.Substring($source.Length + 1).Replace('\','/')
+    if (-not $manifest.PSObject.Properties[$relative]) { throw ('Unverified package file: ' + $relative) }
+}
+if ($project.Name -in @('GenericKnights','ReworkedChemist')) {
+    if (-not (Test-Path -LiteralPath (Join-Path $game 'FFTModLoader.exe') -PathType Leaf)) { throw 'Install the complete FFTModLoader package first.' }
+    $required = @{
+        'FFTModLoader.Runtime\InternalMods\JobExpansion\ModConfig.json' = 'fftmodloader.jobexpansion'
+        'Mods\fftivc.utility.modloader\ModConfig.json' = 'fftivc.utility.modloader'
+        'Mods\reloaded.sharedlib.hooks\ModConfig.json' = 'reloaded.sharedlib.hooks'
+        'Mods\Reloaded.Memory.SigScan.ReloadedII\ModConfig.json' = 'Reloaded.Memory.SigScan.ReloadedII'
+        'Mods\ffttic.jobs.genericjobs\ModConfig.json' = 'ffttic.jobs.genericjobs'
+    }
+    foreach ($dependency in $required.GetEnumerator()) {
+        $config = Join-Path $game $dependency.Key
+        if (-not (Test-Path -LiteralPath $config -PathType Leaf) -or
+            (Get-Content -LiteralPath $config -Raw | ConvertFrom-Json).ModId -ne $dependency.Value) {
+            throw ('Install the complete FFTModLoader package first. Missing dependency: ' + $dependency.Value)
+        }
+    }
 }
 if ($project.Name -eq 'ReworkedChemist') {
     $frameworkConfig = Join-Path $game 'FFTModLoader.Runtime\InternalMods\ContentExpansion\ModConfig.json'

@@ -4,28 +4,29 @@
 
 Autor: **ZeroDS** · [Código-fonte e releases](https://github.com/andersongz0/FFTModLoader)
 
-Loader Windows x64 para **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)**.
-**0.11.7-rc.1** é uma versão preliminar disponível para teste.
-A versão estável anterior continua disponível.
+FFTModLoader carrega mods compatíveis em **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)** no Windows. Ele inicia o jogo com o runtime incluído, organiza as dependências dos mods e oferece expansões integradas para novas classes, itens, habilidades, menus, lojas e suporte à IA.
+
+Instalar somente o loader não altera as classes ou os itens do jogo: esse conteúdo vem dos mods que você escolher instalar.
 
 ## Requisitos
 
-- Windows x64.
-- Instalação legítima da Steam de **FINAL FANTASY TACTICS - The Ivalice Chronicles**, modo Enhanced.
-- Pacote completo do FFTModLoader. Runtime e componentes de compatibilidade estão incluídos; não é necessário instalar a interface do Reloaded-II separadamente.
+- Windows x64 e instalação legítima de **FINAL FANTASY TACTICS - The Ivalice Chronicles** pela Steam, modo Enhanced.
+- ZIP completo da release do FFTModLoader.
 
 ## Guia de Instalação do FFTModLoader
 
-1. Feche o jogo e o loader.
-2. Baixe **FFTModLoader-0.11.7-rc.1.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.1), não os arquivos **Source code**.
-3. Extraia o ZIP em uma pasta fora da instalação do jogo.
-4. Abra o PowerShell na pasta extraída e execute `./install.ps1 -GameDirectory "pasta do jogo"`. Informe a pasta que contém **FFT_enhanced.exe**.
-5. Abra **FFTModLoader.exe** na pasta do jogo. Mantenha `FFTModLoader.Runtime` e as pastas de compatibilidade instaladas junto dele.
+1. Feche o jogo. Feche também o loader, caso já esteja instalado e aberto.
+2. Baixe **FFTModLoader-0.11.7-rc.2.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.2), não **Source code**.
+3. Extraia o ZIP em uma pasta separada, fora da instalação do jogo.
+4. Dê dois cliques em **Install.cmd** e escolha o idioma.
+5. Confira a pasta encontrada e digite **SIM** para confirmar. Se houver várias instalações, escolha uma; se nenhuma for encontrada, informe o caminho de **FFT_enhanced.exe** ou da pasta que o contém.
+6. Autorize a solicitação de permissão do Windows, se aparecer, e aguarde a mensagem de conclusão.
 
-O instalador confere os hashes e faz backup dos arquivos substituídos. Não modifica saves nem outros mods.
-Requer uma instalação legítima da Steam. As expansões não são preparadas para o modo Classic.
-SHA-256 do executável Enhanced suportado:
-`937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5`.
+Não é necessário digitar comandos. O instalador verifica o pacote e guarda arquivos substituídos em **FFTModLoader.Backup**, dentro da pasta do jogo. Saves e outros mods são preservados.
+
+## Como usar
+
+Abra **FFTModLoader.exe** na pasta do jogo. Mantenha a pasta **FFTModLoader.Runtime** e os componentes de compatibilidade que o acompanham.
 
 ## Expansões integradas
 
@@ -35,24 +36,22 @@ As duas fazem parte do loader, sem instalação separada:
 - `FFTModLoader.Runtime/InternalMods/ContentExpansion`: tabelas de itens/habilidades/fórmulas, inventário, saves, bridge nativo, menus, lojas e rotas da IA.
 
 As funções das expansões são ativadas por um mod consumidor compatível; instalar somente o loader não ativa o conteúdo desse mod.
-Isso não significa que qualquer mod novo seja compatível sem desenvolvimento adicional.
 
-## Atualização e solução de problemas
 
-Feche jogo e loader antes de executar o instalador da nova release. Arquivos substituídos ficam em backup em **FFTModLoader.Backup**.
-Se o loader informar arquivos internos ausentes, reinstale o pacote completo em vez de copiar apenas o executável.
-Uma versão do executável do jogo não suportada exige atualização compatível do loader; não ignore essa verificação.
+Consulte [os detalhes de verificação](VERIFICATION.md) para o executável suportado.
 
-## Compatibilidade e créditos
+## Atualização
+
+Feche o jogo e o loader, se estiver aberto, e execute **Install.cmd** da nova release completa. Se faltarem arquivos de dependências, reinstale o pacote completo do FFTModLoader.
+
+## Créditos
 
 **Nenkai** criou [Utility Mod Loader](https://github.com/Nenkai/fftivc.utility.modloader),
 [FF16Tools](https://github.com/Nenkai/FF16Tools) e [FaithFramework](https://github.com/Nenkai/FaithFramework).
 Essas contribuições são fundamentais para o projeto. Autores e licenças das dependências foram preservados.
 
 Incluídos: Utility Mod Loader, GenericJobs original (cipherxof; aviso MIT: trigger), SigScan, SharedLib.Hooks, runtime integrado Reloaded-II e .NET.
-Não é necessário instalar a interface do Reloaded-II separadamente. Seus componentes continuam sendo usados e creditados.
 O código correspondente, com as modificações locais, está em `vendor/Reloaded-II`.
 Não distribuímos executável do jogo, PAC completo, saves nem vídeos privados de teste.
 
 Veja [créditos e ferramentas](CREDITS.pt-BR.md), [compilação](BUILD.pt-BR.md) e [avisos de terceiros](THIRD_PARTY_NOTICES.md).
-Novos mods só serão publicados quando o usuário decidir explicitamente que estão finalizados.

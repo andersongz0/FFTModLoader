@@ -1,45 +1,23 @@
-# Candidate verification — 2026-10-09
-
-[English](#english) | [Português](#português)
+# Verification / Verificação
 
 ## English
 
-Candidate set: FFTModLoader 0.11.7-rc.1, Generic Knights 0.1.26-rc.1,
-Reworked Chemist 0.2.44-rc.1. The previous stable releases remain available.
+The rc.2 packages add double-click installation, automatic Steam-library detection, folder confirmation and revised documentation. Gameplay data, artwork, ContentExpansion managed modules and the approved native bridge are unchanged from rc.1. The launcher version label is updated.
 
-- Public managed sources compile without warnings/errors; eight provider/consumer lifecycle tests pass.
-- Actual compiled ContentExpansion host regression tests pass: medicine menus and stock rejection,
-  menu closure/back navigation, drawing order, chapter shops, flask formula, native interception,
-  save/GC lifetime and AI routes. Native owned-memory/ABI regression tests also pass.
-- All three actual release installers pass in an isolated clean folder. Preparation resolves eight unique
-  mod IDs with complete dependency/DLL closure and both loader-owned expansions.
-- Legacy Chemist folder migrates to a recoverable backup. Test save sentinel and game executable remain unchanged.
-- Reworked Chemist gameplay resources and the approved native bridge are byte-for-byte preserved.
-  Provider/consumer managed binaries were rebuilt for the architecture migration.
-- Generic Knights gameplay artwork/data are unchanged except project metadata and credit/documentation additions.
-- Publication audit excludes game executables/archives, saves, private recordings, logs, dumps and credentials.
+Installer checks cover Steam-library discovery, multiple installations, manual selection, cancellation, literal path escaping, package integrity, missing dependencies and clean three-package installation in an isolated folder. Runtime preparation resolves eight unique mod IDs and both integrated expansions. Backup, legacy folder migration and save/executable preservation are checked.
 
-Preparation and owned-memory tests do **not** run a game scene. A live clean-folder gameplay test
-by the user is still pending; these releases are prerelease test candidates, not a new gameplay approval.
-Only publish new mods after the user's explicit finalized decision.
+These checks do not run a live game scene. The clean-install gameplay test remains pending. Releases are labeled prerelease until that test is approved.
+
+Supported Enhanced executable SHA-256:
+`937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5`.
 
 ## Português
 
-Conjunto candidato: FFTModLoader 0.11.7-rc.1, Generic Knights 0.1.26-rc.1,
-Reworked Chemist 0.2.44-rc.1. As releases estáveis anteriores continuam disponíveis.
+Os pacotes rc.2 adicionam instalação por duplo clique, busca automática nas bibliotecas Steam, confirmação da pasta e documentação revisada. Dados de gameplay, arte, módulos gerenciados do ContentExpansion e o bridge nativo aprovado permanecem iguais ao rc.1. O texto da versão do launcher foi atualizado.
 
-- Fontes gerenciadas públicas compilam sem avisos/erros; oito testes do ciclo provider/consumer passaram.
-- Testes do host ContentExpansion realmente compilado passaram: menus de itens e estoque zerado,
-  fechamento/volta dos menus, ordem de desenho, lojas por capítulo, fórmula dos frascos, interceptação nativa,
-  saves/GC e rotas da IA. Os testes nativos em memória própria/ABI também passaram.
-- Os três instaladores reais passaram em uma pasta limpa isolada. A preparação resolve oito IDs únicos,
-  todas as dependências/DLLs e as duas expansões internas do loader.
-- A pasta antiga do Chemist é migrada para backup recuperável. O arquivo de teste de save e o executável não mudaram.
-- Recursos de gameplay do Chemist e bridge nativo aprovado permanecem idênticos byte a byte.
-  Os binários gerenciados provider/consumer foram recompilados para a migração da arquitetura.
-- Arte/dados do Generic Knights não mudaram, exceto metadados e documentação/créditos adicionais.
-- Auditoria exclui executáveis/arquivos completos do jogo, saves, vídeos privados, logs, dumps e credenciais.
+As verificações do instalador cobrem busca nas bibliotecas Steam, várias instalações, seleção manual, cancelamento, caminhos com caracteres especiais, integridade do pacote, dependências ausentes e instalação dos três pacotes em uma pasta isolada. A preparação resolve oito IDs de mods e as duas expansões integradas. Backup, migração da pasta antiga e preservação dos saves/executável são verificados.
 
-A preparação e os testes em memória própria **não** executam uma cena do jogo. Falta o teste
-de gameplay em pasta limpa pelo usuário; estas releases são candidatas de teste, não uma nova aprovação.
-Novos mods só serão publicados após decisão explícita do usuário de que estão finalizados.
+Essas verificações não executam uma cena do jogo. O teste de gameplay em instalação limpa continua pendente. As releases são marcadas como preliminares até a aprovação desse teste.
+
+SHA-256 do executável Enhanced suportado:
+`937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5`.

@@ -966,7 +966,7 @@ int wmain(int argc, wchar_t** argv)
         baseDir / L"FFT_enhanced.exe";
 
     std::wcout
-        << L"FFTModLoader 0.11.7-rc.1 - ZeroDS - Runtime independente integrado\n"
+        << L"FFTModLoader 0.11.7-rc.2 - ZeroDS - Runtime independente integrado\n"
         << L"Projeto: https://github.com/andersongz0/FFTModLoader\n";
 
     std::wcout

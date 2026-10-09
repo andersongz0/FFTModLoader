@@ -35,9 +35,3 @@ Nenkai is the original author of these tools, not ZeroDS. Their MIT notices are 
 The list distinguishes development tools from required runtime dependencies; users need only the release packages and their legal game installation.
 FINAL FANTASY TACTICS and original game assets belong to their respective owners.
 Third-party artwork is not relicensed as original ZeroDS code. See Generic Knights' sprite credit table and `SPRITE_CREDITS.json`.
-
-## Publication policy
-
-Only publish a **new mod** once the user explicitly declares it finalized.
-A successful build, a request to test, or a scheduled run does not authorize publishing unfinished new mods.
-Updates to the existing finalized projects can be clearly labeled prerelease test candidates; do not mark them gameplay-approved before the user's test.
