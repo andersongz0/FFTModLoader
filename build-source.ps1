@@ -9,3 +9,5 @@ if ($LASTEXITCODE -ne 0) { throw 'Launcher build failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Console regression tests failed.' }
 & dotnet build src/JobExpansionRuntime/GenericJobs.csproj -c $Configuration --nologo
 if ($LASTEXITCODE -ne 0) { throw 'JobExpansion build failed.' }
+& dotnet build src/ContentExpansionModule/ContentExpansionModule.csproj -c $Configuration --nologo
+if ($LASTEXITCODE -ne 0) { throw 'ContentExpansion build failed.' }

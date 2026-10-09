@@ -12,7 +12,10 @@ if ($source -eq $game -or $source.StartsWith($game + '\', [StringComparison]::Or
     throw 'Extract the release outside the game directory before running this installer.'
 }
 $project = Get-Content -LiteralPath (Join-Path $source 'PROJECT.json') -Raw | ConvertFrom-Json
-if (Test-Path -LiteralPath (Join-Path $source 'SHA256SUMS.json')) {
+if (-not (Test-Path -LiteralPath (Join-Path $source 'SHA256SUMS.json') -PathType Leaf)) {
+    throw 'Missing package integrity manifest. Download and extract the release ZIP.'
+}
+{
     $manifest = Get-Content -LiteralPath (Join-Path $source 'SHA256SUMS.json') -Raw | ConvertFrom-Json
     foreach ($entry in $manifest.PSObject.Properties) {
         $inputFile = [IO.Path]::GetFullPath((Join-Path $source $entry.Name))
@@ -22,7 +25,7 @@ if (Test-Path -LiteralPath (Join-Path $source 'SHA256SUMS.json')) {
             throw ('Package integrity check failed: ' + $entry.Name)
         }
     }
-}
+}.Invoke()
 $backup = Join-Path $game ('FFTModLoader.Backup\' + $project.Name + '-install-' + (Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
 if (Test-Path -LiteralPath $backup) { throw 'Backup directory already exists.' }
 $backupFull = [IO.Path]::GetFullPath($backup)
@@ -32,7 +35,29 @@ if (-not $backupFull.StartsWith($game + '\FFTModLoader.Backup\', [StringComparis
 $files = Get-ChildItem -LiteralPath $source -Recurse -File | Where-Object {
     $relative = $_.FullName.Substring($source.Length + 1)
     $relative.StartsWith('Mods\') -or $relative.StartsWith('FFTModLoader.Runtime\') -or
-    $_.DirectoryName -eq $source -and ($_.Extension -eq '.dll' -or $_.Name -eq 'FFTModLoader.exe' -or $_.Name -eq 'FFTModLoader.config.json')
+    ($_.DirectoryName -eq $source -and ($_.Extension -eq '.dll' -or $_.Name -eq 'FFTModLoader.exe' -or $_.Name -eq 'FFTModLoader.config.json'))
+}
+if ($project.Name -eq 'ReworkedChemist') {
+    $frameworkConfig = Join-Path $game 'FFTModLoader.Runtime\InternalMods\ContentExpansion\ModConfig.json'
+    if (-not (Test-Path -LiteralPath $frameworkConfig -PathType Leaf) -or
+        (Get-Content -LiteralPath $frameworkConfig -Raw | ConvertFrom-Json).ModId -ne 'fftmodloader.contentexpansion') {
+        throw 'Install FFTModLoader 0.11.7 or newer before Reworked Chemist.'
+    }
+    # Move only an explicitly identified legacy mod, never saves or unrelated folders.
+    $legacy = [IO.Path]::GetFullPath((Join-Path $game 'Mods\Reworked Chemist - Venom Test'))
+    if (Test-Path -LiteralPath $legacy) {
+        $legacyConfig = Join-Path $legacy 'ModConfig.json'
+        if (-not (Test-Path -LiteralPath $legacyConfig -PathType Leaf) -or
+            (Get-Content -LiteralPath $legacyConfig -Raw | ConvertFrom-Json).ModId -ne 'ffttic.tests.reworkedchemist.venom') {
+            throw 'Legacy folder identity could not be verified; no files moved.'
+        }
+        $legacyBackup = [IO.Path]::GetFullPath((Join-Path $backup 'legacy\Reworked Chemist - Venom Test'))
+        if (-not $legacy.StartsWith($game + '\Mods\', [StringComparison]::OrdinalIgnoreCase) -or
+            -not $legacyBackup.StartsWith($backupFull + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe migration paths.' }
+        New-Item -ItemType Directory -Path (Split-Path $legacyBackup -Parent) -Force | Out-Null
+        Move-Item -LiteralPath $legacy -Destination $legacyBackup
+        Write-Host ('Legacy mod preserved in backup: ' + $legacyBackup)
+    }
 }
 foreach ($file in $files) {
     $relative = $file.FullName.Substring($source.Length + 1)

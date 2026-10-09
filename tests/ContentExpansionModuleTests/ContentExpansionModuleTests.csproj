@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-windows</TargetFramework><OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ReworkedChemistSourceDirectory Condition="'$(ReworkedChemistSourceDirectory)' == ''">$(MSBuildThisFileDirectory)../../../AlchemistRework</ReworkedChemistSourceDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/ContentExpansionModule/ContentExpansionModule.csproj" />
+    <Compile Include="$(ReworkedChemistSourceDirectory)/PlayableRuntime/Startup.cs" Link="Consumer.cs" />
+    <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" />
+  </ItemGroup>
+</Project>

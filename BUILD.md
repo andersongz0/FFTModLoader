@@ -1,25 +1,24 @@
-# Código-fonte
+# Building FFTModLoader
 
-Autor do projeto: ZeroDS. Windows x64, Visual Studio 2022 com C++ e CMake 3.24+.
-Para os projetos gerenciados, instale o SDK .NET 9 (ou um SDK compatível com net8/net9).
+[English](BUILD.md) | [Português](BUILD.pt-BR.md)
 
-Execute `./build-source.ps1`. Ele compila o launcher, o teste do console e o
-JobExpansion, sem instalar nada no jogo nem modificar saves. Os pacotes NuGet
-e as dependências CMake são restaurados de seus projetos originais.
+Windows x64; Visual Studio 2022 with C++/MASM and CMake 3.24+; .NET SDK supporting net8/net9.
+Run `./build-source.ps1` to build the launcher, RuntimeLogRelayTests, JobExpansion and ContentExpansion.
+This does not install files into the game or change saves.
 
-`src/Native` contém também a arquitetura histórica do protótipo. O launcher
-0.11.6 usa o runtime integrado; não confunda o DLL histórico com o bootstrapper.
+- `src/ContentExpansionApi`: shared controller contract.
+- `src/ContentExpansionModule`: loader-owned provider, compiling Core/Runtime sources.
+- `src/ContentExpansionCore`, `Runtime`, `Native`: tables, formulas, saves, native routes and bridge.
+- `tools/build_native_bridge.ps1`: native bridge build; release rc.1 uses the byte-identical approved v5 bridge.
+- `vendor/Reloaded-II`: full locally modified corresponding runtime source, with original GPL license.
 
-O código completo correspondente ao runtime Reloaded-II redistribuído está em
-`vendor/Reloaded-II`, incluindo as extensões locais em LoaderConfig/dllmain e
-na leitura de configuração. Consulte as instruções e a licença desse projeto
-para compilá-lo. A publicação preserva os binários aprovados em vez de recompilar
-dependências sem necessidade.
+For integration tests, check out ReworkedChemist as well and pass
+`-p:ReworkedChemistSourceDirectory="path/to/ReworkedChemist/AlchemistRework"`
+to `dotnet run --project tests/ContentExpansionModuleTests -c Release`.
+The tests check shared exports, dormant provider registration, one-time activation, missing dependency and incompatible API refusal.
+Core/runtime tests are under `tests`; native ABI tests need a legal local game executable and installed hook libraries.
+The host's comprehensive owned-memory tests are in ReworkedChemist's source repository and reference this module.
 
-`src/ContentExpansionCore`, `src/ContentExpansionRuntime` e
-`src/ContentExpansionNative` são os componentes compartilhados do Reworked
-Chemist. O projeto que compila seu DLL final e os testes específicos estão no
-[repositório ReworkedChemist](https://github.com/andersongz0/ReworkedChemist).
-
-As fontes não contêm dados completos extraídos do jogo. Testes que usam tabelas,
-recursos ou executáveis nativos exigem uma instalação legal fornecida localmente.
+Do not treat synthetic tests as an in-game/GPU validation.
+Rebuilding produces development binaries; it does not certify the new build as player-approved.
+No native game executable, complete archive, private save or recording belongs in publication.

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks><TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>FFTModLoader.ContentExpansion.Module</AssemblyName>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../ContentExpansionApi/ContentExpansionApi.csproj" />
+    <Compile Include="../ContentExpansionCore/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <Compile Include="../ContentExpansionRuntime/*.cs" Link="Runtime/%(Filename)%(Extension)" />
+    <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime" />
+    <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
+  </ItemGroup>
+  <ItemGroup><None Update="ModConfig.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+</Project>

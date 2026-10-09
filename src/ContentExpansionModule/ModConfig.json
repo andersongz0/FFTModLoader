@@ -1,0 +1,16 @@
+{
+  "ModId": "fftmodloader.contentexpansion",
+  "ModName": "FFTModLoader Content Expansion",
+  "ModAuthor": "ZeroDS",
+  "ModVersion": "0.1.0-rc.1",
+  "ModDescription": "Loader-owned items, abilities, formulas, inventory, shops, saves, menus, AI and native expansion infrastructure. Gameplay activates only for a consuming mod.",
+  "ModDll": "FFTModLoader.ContentExpansion.Module.dll",
+  "CanUnload": false,
+  "HasExports": true,
+  "IsLibrary": false,
+  "IsUniversalMod": false,
+  "ModDependencies": ["fftmodloader.jobexpansion", "fftivc.utility.modloader", "reloaded.sharedlib.hooks"],
+  "OptionalDependencies": [],
+  "SupportedAppId": ["fft_enhanced.exe"],
+  "ProjectUrl": "https://github.com/andersongz0/FFTModLoader"
+}
