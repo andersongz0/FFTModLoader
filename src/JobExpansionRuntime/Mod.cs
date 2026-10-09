@@ -40,6 +40,7 @@ namespace GenericJobs
 
         // Cached extra jobs
         private ushort[] _extraJobs = Array.Empty<ushort>();
+        private ushort[] _registeredJobs = Array.Empty<ushort>();
 
         // State tracking
         private ushort[] _originalJobList = new ushort[MaxJobs]; // Store original jobs
@@ -180,10 +181,23 @@ namespace GenericJobs
                 _logger.WriteLine($"[{_modConfig.ModId}] [ExpansionConfig] File: {configPath}");
                 _expansion = ExpansionSettings.Load(configPath);
                 _logger.WriteLine($"[{_modConfig.ModId}] [ExpansionConfig] Requested: extra-jobs={_expansion.MaxExtraJobs}, new sprite sets={_expansion.MaxNewSpriteSets}. Safe maxima: {ExpansionSettings.SafeMaxExtraJobs}/{ExpansionSettings.SafeMaxNewSpriteSets}.");
+                var enabledMods = _modLoader.GetAppConfig().EnabledMods;
+                string gameDirectory = Path.GetDirectoryName(mainModule.FileName)!;
+                _registeredJobs = JobActivationPolicy.ReadRegisteredJobs(enabledMods.Select(id =>
+                    ModDirectoryResolver.Resolve(gameDirectory, id, _modLoader.GetDirectoryForModId)));
                 _extraJobs = ParseExtraJobs();
                 ValidateVisualCapacity(Path.GetDirectoryName(mainModule.FileName)!); // Validate staged mods BEFORE hooks; later mods are not registered yet.
                 _logger.WriteLine($"[{_modConfig.ModId}] [ExpansionConfig] Validated capacities: menu={_expansion.MaxExtraJobs} (configured={_extraJobs.Length}), sprites={_expansion.MaxNewSpriteSets} new sets (total shapes={_expansion.ShapeCapacity}). Restart the game after changing JSON.");
                 _logger.WriteLine($"[{_modConfig.ModId}] Loaded {_extraJobs.Length} extra jobs");
+
+                // Loading infrastructure alone must preserve native gameplay.
+                // Chemist needs sparse table lookup but not the class menu hooks.
+                if (_registeredJobs.Length == 0 &&
+                    !enabledMods.Contains("ffttic.tests.reworkedchemist.venom"))
+                {
+                    _logger.WriteLine($"[{_modConfig.ModId}] Dormant: no expansion consumer; original job menu preserved.");
+                    return;
+                }
 
                 // Fixed addresses require the same executable guard as visual
                 // expansion. Do not touch another game build's memory.
@@ -195,7 +209,7 @@ namespace GenericJobs
 
                 var scanner = new Scanner(process, process.MainModule);
 
-                InstallHooks(scanner);
+                if (_extraJobs.Length != 0) InstallHooks(scanner);
                 _modLoader.OnModLoaderInitialized += InstallNxdExpansion;
                 _modLoader.OnModLoaderInitialized += InstallVisualExpansion;
             }
@@ -409,36 +423,7 @@ namespace GenericJobs
 
         private ushort[] ParseExtraJobs()
         {
-            var tempList = _configuration.ExtraJobsHex;
-
-            if (string.IsNullOrWhiteSpace(tempList))
-                return Array.Empty<ushort>();
-
-            ushort[] jobs;
-            try
-            {
-                jobs = tempList
-                    .Split(',')
-                    .Select(s => s.Trim())
-                    .Where(s => !string.IsNullOrEmpty(s))
-                    .Select(s =>
-                    {
-                        if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                            return Convert.ToUInt16(s[2..], 16);
-
-                        if (s.Any(c => "ABCDEFabcdef".Contains(c)))
-                            return Convert.ToUInt16(s, 16);
-
-                        return Convert.ToUInt16(s, 10);
-                    })
-                    .Distinct()
-                    .ToArray();
-            }
-            catch (Exception ex)
-            {
-                _logger.WriteLine($"[{_modConfig.ModId}] Error parsing ExtraJobsHex ({ex.Message}), using defaults");
-                jobs = new ushort[] { 0xA0, 0xA1, 0xA2, 0xA3 };
-            }
+            ushort[] jobs = JobActivationPolicy.SelectJobs(_registeredJobs, _configuration.ExtraJobsHex);
             _expansion.EnsureMenuFits(jobs.Length);
             return jobs;
         }
@@ -852,8 +837,7 @@ namespace GenericJobs
             _configuration = configuration;
             _logger.WriteLine($"[{_modConfig.ModId}] Config Updated: Applying");
 
-            _extraJobs = ParseExtraJobs();
-            _logger.WriteLine($"[{_modConfig.ModId}] Reloaded {_extraJobs.Length} extra jobs");
+            _logger.WriteLine($"[{_modConfig.ModId}] Restart required to apply registered job menu changes safely.");
         }
         #endregion
 

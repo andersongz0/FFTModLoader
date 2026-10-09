@@ -8,9 +8,9 @@ namespace GenericJobs.Configuration
     public class Config : Configurable<Config>
     {
         [DisplayName("Extra Jobs (Decimal or Hex IDs)")]
-        [Description("Comma-separated list of extra job IDs shown across expansion pages (maximum 21).")] 
-        [DefaultValue("A0, A1, A2, A3")]
-        public string ExtraJobsHex { get; set; } = "A0, A1, A2, A3";
+        [Description("Optional list of registered job IDs (maximum 21). Empty uses installed mod registrations; unregistered IDs are ignored.")]
+        [DefaultValue("")]
+        public string ExtraJobsHex { get; set; } = "";
     }
 
     /// <summary>

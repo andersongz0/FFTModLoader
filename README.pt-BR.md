@@ -16,7 +16,7 @@ Instalar somente o loader não altera as classes ou os itens do jogo: esse conte
 ## Guia de Instalação do FFTModLoader
 
 1. Feche o jogo. Feche também o loader, caso já esteja instalado e aberto.
-2. Baixe **FFTModLoader-0.11.7-rc.2.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.2), não **Source code**.
+2. Baixe **FFTModLoader-0.11.7-rc.3.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.3), não **Source code**.
 3. Extraia o ZIP em uma pasta separada, fora da instalação do jogo.
 4. Dê dois cliques em **Install.cmd** e escolha o idioma.
 5. Confira a pasta encontrada e digite **SIM** para confirmar. Se houver várias instalações, escolha uma; se nenhuma for encontrada, informe o caminho de **FFT_enhanced.exe** ou da pasta que o contém.

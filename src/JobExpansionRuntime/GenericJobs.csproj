@@ -11,6 +11,9 @@
     <RootNamespace>FFTModLoader.JobExpansion</RootNamespace>
     <OutputPath>bin/$(Configuration)/</OutputPath>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Release packages do not disclose local build/PDB paths. -->
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <PathMap>$(MSBuildProjectDirectory)=/_/FFTModLoader/JobExpansion</PathMap>
 
     <!-- IL Trimming Support for Framework Dependent Apps. Unofficial.
          If you set this to true, trimming will be enabled when you publish the mod.

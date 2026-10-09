@@ -461,6 +461,7 @@ namespace
     bool CopyResolvedMod(
         const fs::path& manifestPath,
         const fs::path& resolvedRoot,
+        bool genericJobsContent,
         std::set<std::string>& resolvedIds,
         std::wstring& errorMessage)
     {
@@ -530,6 +531,14 @@ namespace
             }
 
             const fs::path destination = destinationRoot / relative;
+            // Bundled compatibility resources are gameplay, not infrastructure.
+            // Keep originals untouched; expose them only to a registered consumer.
+            if (id == "ffttic.jobs.genericjobs" && !genericJobsContent &&
+                _wcsicmp(relative.begin()->c_str(), L"FFTIVC") == 0)
+            {
+                if (it->is_directory()) it.disable_recursion_pending();
+                continue;
+            }
             if (it->is_directory())
             {
                 fs::create_directories(destination, error);
@@ -552,16 +561,27 @@ namespace
                 return false;
         }
 
-        // GenericJobs remains byte-for-byte intact in Mods/. In the resolved
-        // runtime view it becomes content-only because the loader-owned
-        // expansion component supplies the compatible menu hooks.
+        // The loader owns the hooks. GenericJobs is dependency-only without a
+        // content consumer, and content-only when its jobs are requested.
         if (id == "ffttic.jobs.genericjobs")
         {
             manifest["ModDll"] = "";
             manifest["ModR2RManagedDll32"] = "";
             manifest["ModR2RManagedDll64"] = "";
+            manifest["ModNativeDll32"] = "";
+            manifest["ModNativeDll64"] = "";
         }
 
+        // Backward-compatible registration for already published Knights
+        // packages. Future consumers can ship this manifest themselves.
+        if (id == "ffttic.jobs.genericknights" &&
+            !fs::exists(destinationRoot / L"FFTModLoader.jobs.json"))
+        {
+            if (!WriteJson(destinationRoot / L"FFTModLoader.jobs.json", {
+                    {"SchemaVersion", 1}, {"JobIds", {0xA0, 0xA1, 0xA2, 0xA3}},
+                    {"RequiresGenericJobsContent", true}}))
+                return false;
+        }
         return WriteJson(destinationRoot / L"ModConfig.json", manifest);
     }
 
@@ -587,6 +607,8 @@ namespace
         }
 
         std::set<std::string> resolvedIds;
+        std::vector<fs::path> manifests;
+        bool genericJobsContent = false;
         for (const fs::path& root : {sourceMods, internalMods})
         {
             if (!fs::exists(root))
@@ -611,16 +633,33 @@ namespace
                     continue;
                 }
 
-                if (!CopyResolvedMod(
-                        it->path(),
-                        resolvedMods,
-                        resolvedIds,
-                        errorMessage))
+                manifests.push_back(it->path());
+                try
                 {
+                    std::ifstream input(it->path(), std::ios::binary);
+                    const json config = json::parse(input);
+                    if (config.value("ModId", "") == "ffttic.jobs.genericknights")
+                        genericJobsContent = true;
+                    const auto jobsPath = it->path().parent_path() / L"FFTModLoader.jobs.json";
+                    if (fs::exists(jobsPath))
+                    {
+                        std::ifstream jobsInput(jobsPath, std::ios::binary);
+                        const json jobs = json::parse(jobsInput);
+                        if (jobs.at("SchemaVersion") != 1 || !jobs.at("JobIds").is_array())
+                            throw std::runtime_error("Unsupported job registration");
+                        genericJobsContent |= jobs.value("RequiresGenericJobsContent", false);
+                    }
+                }
+                catch (...)
+                {
+                    errorMessage = L"Registro de mod/classes invalido: " + it->path().wstring();
                     return false;
                 }
             }
         }
+        for (const auto& path : manifests)
+            if (!CopyResolvedMod(path, resolvedMods, genericJobsContent, resolvedIds, errorMessage))
+                return false;
 
         if (!resolvedIds.contains("fftmodloader.jobexpansion"))
         {
@@ -966,7 +1005,7 @@ int wmain(int argc, wchar_t** argv)
         baseDir / L"FFT_enhanced.exe";
 
     std::wcout
-        << L"FFTModLoader 0.11.7-rc.2 - ZeroDS - Runtime independente integrado\n"
+        << L"FFTModLoader 0.11.7-rc.3 - ZeroDS - Runtime independente integrado\n"
         << L"Projeto: https://github.com/andersongz0/FFTModLoader\n";
 
     std::wcout
