@@ -65,7 +65,7 @@ namespace GenericJobs
         private IHook<HandleJobMenuClickDelegate>? _handleJobMenuClick;
         private IHook<HandleJobMenuStateDelegate>? _handleJobMenuState;
         private IHook<JobAbilityListDelegate>? _jobAbilityList;
-        private JobAbilityListDelegate? _jobAbilityListOriginal;
+        private NativeJobRouteMemory? _jobAbilityRoute;
         private IHook<StartEffectDelegate>? _startEffect;
         private IHook<HandleTeleportAnimationDelegate>? _handleTeleportAnimation;
         private IHook<LoadG2DDelegate>? _loadG2D;
@@ -766,24 +766,12 @@ namespace GenericJobs
             }
         }
 
-        private void InstallJobAbilityListHook(long address)
+        private unsafe void InstallJobAbilityListHook(long address)
         {
-            _jobAbilityList = _hooks!.CreateHook<JobAbilityListDelegate>(JobAbilityListHook, address);
-            _jobAbilityListOriginal = _jobAbilityList.OriginalFunction;
-            // Publish both owner and original delegate before activation.
+            _jobAbilityRoute = new NativeJobRouteMemory();
+            _jobAbilityList = _hooks!.CreateHook<JobAbilityListDelegate>((void*)_jobAbilityRoute.Address, address);
+            _jobAbilityRoute.Complete(NativeJobRoutes.BuildLearn(_jobAbilityList.OriginalFunctionAddress, _jobList), false);
             _jobAbilityList.Activate();
-        }
-
-        private unsafe int JobAbilityListHook(short unit, ushort jobId, int category, nint output, int mode)
-        {
-            ushort* joblist = (ushort*)(_jobList);
-
-            // in order to equip dark knight reaction/support, we needed to +1 a > 19 loop
-            // which ended at 0x5E
-            if (joblist != null && joblist[0] != 0x5E && jobId == 0x5E)
-                jobId = 0xA0;
-
-            return _jobAbilityListOriginal!(unit, jobId, category, output, mode);
         }
 
         private unsafe int HandleTeleportAnimationHook(nint a1)

@@ -11,7 +11,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Console regression tests failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Load-order tests failed.' }
 & dotnet build src/JobExpansionRuntime/GenericJobs.csproj -c $Configuration --nologo
 if ($LASTEXITCODE -ne 0) { throw 'JobExpansion build failed.' }
-& dotnet run --project tests/JobLearnHookTests -c $Configuration --nologo
+& dotnet run --project tests/JobLearnHookTests -c $Configuration
 if ($LASTEXITCODE -ne 0) { throw 'Job Learn native-return regression failed.' }
 & dotnet build src/ContentExpansionModule/ContentExpansionModule.csproj -c $Configuration --nologo
 if ($LASTEXITCODE -ne 0) { throw 'ContentExpansion build failed.' }
