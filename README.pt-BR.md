@@ -5,16 +5,22 @@
 Autor: **ZeroDS** · [Código-fonte e releases](https://github.com/andersongz0/FFTModLoader)
 
 Loader Windows x64 para **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)**.
-**0.11.7-rc.1** é uma candidata para testar a instalação limpa, ainda não uma nova aprovação de gameplay.
+**0.11.7-rc.1** é uma versão preliminar disponível para teste.
 A versão estável anterior continua disponível.
 
-## Instalação limpa
+## Requisitos
+
+- Windows x64.
+- Instalação legítima da Steam de **FINAL FANTASY TACTICS - The Ivalice Chronicles**, modo Enhanced.
+- Pacote completo do FFTModLoader. Runtime e componentes de compatibilidade estão incluídos; não é necessário instalar a interface do Reloaded-II separadamente.
+
+## Guia de Instalação do FFTModLoader
 
 1. Feche o jogo e o loader.
-2. Baixe **FFTModLoader-0.11.7-rc.1.zip** na release, não o arquivo de código-fonte automático do GitHub.
-3. Extraia fora da pasta do jogo. Execute `install.ps1 -GameDirectory "pasta do jogo"`.
-4. Instale [Generic Knights](https://github.com/andersongz0/GenericKnights/releases) e/ou [Reworked Chemist](https://github.com/andersongz0/ReworkedChemist/releases) da mesma maneira.
-5. Abra **FFTModLoader.exe** na pasta do jogo.
+2. Baixe **FFTModLoader-0.11.7-rc.1.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.1), não os arquivos **Source code**.
+3. Extraia o ZIP em uma pasta fora da instalação do jogo.
+4. Abra o PowerShell na pasta extraída e execute `./install.ps1 -GameDirectory "pasta do jogo"`. Informe a pasta que contém **FFT_enhanced.exe**.
+5. Abra **FFTModLoader.exe** na pasta do jogo. Mantenha `FFTModLoader.Runtime` e as pastas de compatibilidade instaladas junto dele.
 
 O instalador confere os hashes e faz backup dos arquivos substituídos. Não modifica saves nem outros mods.
 Requer uma instalação legítima da Steam. As expansões não são preparadas para o modo Classic.
@@ -28,9 +34,14 @@ As duas fazem parte do loader, sem instalação separada:
 - `FFTModLoader.Runtime/InternalMods/JobExpansion`: classes, comandos e roteamento dos recursos visuais extras.
 - `FFTModLoader.Runtime/InternalMods/ContentExpansion`: tabelas de itens/habilidades/fórmulas, inventário, saves, bridge nativo, menus, lojas e rotas da IA.
 
-ContentExpansion registra uma API compartilhada, mas só ativa o gameplay do Chemist quando Reworked Chemist solicita.
-Esta primeira API atende à integração atual do Chemist; novos tipos de mod podem exigir desenvolvimento.
-Generic Knights e Reworked Chemist são pacotes separados e não dependem um do outro.
+As funções das expansões são ativadas por um mod consumidor compatível; instalar somente o loader não ativa o conteúdo desse mod.
+Isso não significa que qualquer mod novo seja compatível sem desenvolvimento adicional.
+
+## Atualização e solução de problemas
+
+Feche jogo e loader antes de executar o instalador da nova release. Arquivos substituídos ficam em backup em **FFTModLoader.Backup**.
+Se o loader informar arquivos internos ausentes, reinstale o pacote completo em vez de copiar apenas o executável.
+Uma versão do executável do jogo não suportada exige atualização compatível do loader; não ignore essa verificação.
 
 ## Compatibilidade e créditos
 
