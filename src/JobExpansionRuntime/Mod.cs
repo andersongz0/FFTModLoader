@@ -218,6 +218,7 @@ namespace GenericJobs
                 if (_extraJobs.Length != 0) InstallHooks(scanner);
                 _modLoader.OnModLoaderInitialized += InstallNxdExpansion;
                 _modLoader.OnModLoaderInitialized += InstallVisualExpansion;
+                _modLoader.OnModLoaderInitialized += InstallSwordLimitEquipment;
             }
             catch (Exception ex)
             {

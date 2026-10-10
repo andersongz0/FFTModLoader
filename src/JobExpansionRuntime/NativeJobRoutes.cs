@@ -7,6 +7,31 @@ namespace GenericJobs;
 // CLR, allocate, log, take a managed lock or invoke a managed original delegate.
 internal static class NativeJobRoutes
 {
+    public static byte[] BuildSwordLimitEquipment(long original, long commands)
+    {
+        if (original <= 0 || commands <= 0) throw new ArgumentOutOfRangeException(nameof(original));
+        var c = new Code();
+        // Derived equipment flags serve menus, combat and AI. Bit 8 means
+        // Sword/KnightSword/FellSword; bit 4 normally means Materia Blade(+).
+        // Only a registered generic Limit command may use any sword. Cloud's
+        // command 41 and the original ability records are never modified.
+        c.Bytes("554881ECB0000000488DAC24B0000000");
+        c.Bytes("48894C2420");
+        c.Bytes("FF1502000000EB08"); c.Long(original);
+        c.Bytes("488944243048894C243848895424404C894424484C894C24504C895424584C895C2460");
+        c.Bytes("9C584889442468");
+        c.Bytes("488B4424204885C0"); c.Jump("0F84", "equipDone");
+        c.Bytes("F680B601000008"); c.Jump("0F84", "equipDone");
+        c.Bytes("49BA"); c.Long(commands);
+        c.Bytes("0FB6481241803C0A01"); c.Jump("0F84", "swordLimit");
+        c.Bytes("0FB6889201000041803C0A01"); c.Jump("0F85", "equipDone");
+        c.Label("swordLimit"); c.Bytes("8088B601000004");
+        c.Label("equipDone");
+        c.Bytes("FF7424689D488B442430488B4C2438488B5424404C8B4424484C8B4C24504C8B5424584C8B5C2460");
+        c.Bytes("488D65005DC3");
+        return c.Finish();
+    }
+
     public static byte[] BuildShape(long original, long registrations)
     {
         var c = new Code();

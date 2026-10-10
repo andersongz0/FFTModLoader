@@ -41,6 +41,25 @@ try
         if (!rejected) throw new Exception("Invalid registration accepted.");
     }
     Console.WriteLine("PASS: malformed, unsupported and out-of-range registrations rejected");
+    File.WriteAllText(manifest, "{\"SchemaVersion\":1,\"JobIds\":[162,163],\"SwordLimitCommandIds\":[163]}");
+    byte[] swordCommands = JobActivationPolicy.ReadSwordLimitCommands([builtInDirectory, fixture]);
+    if (swordCommands.Length != 256 || swordCommands[163] != 1 || swordCommands.Sum(x => (int)x) != 1)
+        throw new Exception("Sword Limit must register only Rune Knight, never Cloud or Holy Knight.");
+    if (JobActivationPolicy.ReadSwordLimitCommands([builtInDirectory]).Any(x => x != 0))
+        throw new Exception("Loader alone must not change Limit equipment.");
+    foreach (string invalid in new[] {
+        "{\"SchemaVersion\":1,\"JobIds\":[163],\"SwordLimitCommandIds\":[41]}",
+        "{\"SchemaVersion\":1,\"JobIds\":[162],\"SwordLimitCommandIds\":[163]}",
+        "{\"SchemaVersion\":1,\"JobIds\":null,\"SwordLimitCommandIds\":[163]}",
+        "{\"SchemaVersion\":1,\"JobIds\":[163],\"SwordLimitCommandIds\":null}" })
+    {
+        File.WriteAllText(manifest, invalid);
+        bool rejected = false;
+        try { JobActivationPolicy.ReadSwordLimitCommands([fixture]); }
+        catch (InvalidDataException) { rejected = true; }
+        if (!rejected) throw new Exception("Invalid Sword Limit registration accepted.");
+    }
+    Console.WriteLine("PASS: Sword Limit opt-in is Rune-only; absent, removed, original Cloud and invalid registrations protected");
 }
 finally
 {

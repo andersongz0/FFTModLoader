@@ -10,6 +10,7 @@ public static class JobActivationPolicy
         public int SchemaVersion { get; set; }
         public ushort[] JobIds { get; set; } = [];
         public bool RequiresGenericJobsContent { get; set; }
+        public ushort[] SwordLimitCommandIds { get; set; } = [];
     }
 
     public static ushort[] ReadRegisteredJobs(IEnumerable<string> modDirectories)
@@ -27,6 +28,23 @@ public static class JobActivationPolicy
             jobs.AddRange(registration.JobIds);
         }
         return jobs.Distinct().ToArray();
+    }
+
+    public static byte[] ReadSwordLimitCommands(IEnumerable<string> modDirectories)
+    {
+        var commands = new byte[256];
+        foreach (string directory in modDirectories)
+        {
+            string path = Path.Combine(directory, "FFTModLoader.jobs.json");
+            if (!File.Exists(path)) continue;
+            var registration = JsonSerializer.Deserialize<Registration>(File.ReadAllText(path))
+                ?? throw new InvalidDataException("Empty job registration.");
+            if (registration.SchemaVersion != 1 || registration.JobIds == null || registration.SwordLimitCommandIds == null ||
+                registration.SwordLimitCommandIds.Any(id => id < 0xA0 || id > 0xFF || !registration.JobIds.Contains(id)))
+                throw new InvalidDataException("Sword Limit requires an explicitly registered generic command/job.");
+            foreach (ushort id in registration.SwordLimitCommandIds) commands[id] = 1;
+        }
+        return commands;
     }
 
     public static ushort[] SelectJobs(ushort[] registered, string? preference)

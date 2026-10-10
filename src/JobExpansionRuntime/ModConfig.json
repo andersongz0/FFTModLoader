@@ -3,7 +3,7 @@
   "ModName": "FFTModLoader Job Expansion Runtime",
   "ModAuthor": "ZeroDS",
   "ProjectUrl": "https://github.com/andersongz0/FFTModLoader",
-  "ModVersion": "0.2.13",
+  "ModVersion": "0.2.14",
   "ModDescription": "Loader-owned generic job and visual-resource expansion. Preserves the original GenericJobs mod.",
   "ModDll": "FFTModLoader.JobExpansion.dll",
   "ModIcon": "Preview.png",

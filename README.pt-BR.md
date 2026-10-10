@@ -16,7 +16,7 @@ FFTModLoader carrega mods compatíveis em **FINAL FANTASY TACTICS - The Ivalice 
 ## Guia de Instalação do FFTModLoader
 
 1. Feche o jogo. Feche também o loader, caso já esteja instalado e aberto.
-2. Baixe **FFTModLoader-0.11.7-rc.8.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.8), não **Source code**.
+2. Baixe **FFTModLoader-0.11.7-rc.9.zip** em [Assets da release](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7-rc.9), não **Source code**.
 3. Extraia o ZIP em uma pasta separada, fora da instalação do jogo.
 4. Dê dois cliques em **Install.cmd** e escolha o idioma.
 5. Confira a pasta encontrada e digite **SIM** para confirmar. Se houver várias instalações, escolha uma; se nenhuma for encontrada, informe o caminho de **FFT_enhanced.exe** ou da pasta que o contém.

@@ -106,6 +106,77 @@ finally
     GC.KeepAlive(hook); GC.KeepAlive(capture); GC.KeepAlive(allocation);
 }
 
+TestSwordLimitEquipment();
+
+void TestSwordLimitEquipment()
+{
+    const int equipRva = 0x2779EC;
+    var equipSection = pe.PEHeaders.SectionHeaders.Single(s => s.VirtualAddress <= equipRva && equipRva < s.VirtualAddress + s.SizeOfRawData);
+    byte[] equipPrefix = Convert.FromHexString("488BC448895808488968104889701848897820");
+    Require(image.AsSpan(equipSection.PointerToRawData + equipRva - equipSection.VirtualAddress, equipPrefix.Length)
+        .SequenceEqual(equipPrefix), "Equipment resolver guard changed");
+    using var equipment = new OwnedNativeMemory(4096);
+    using var equipmentUnit = new OwnedNativeMemory(4096);
+    using var commandMap = new OwnedNativeMemory(4096);
+    // Only owned fixture code: model the native producer of equipment flags,
+    // preserving the private register contract so post-call changes are tested.
+    equipment.Write(0, [..Enumerable.Repeat((byte)0x90, 20),
+        ..Convert.FromHexString("8A028881B60100004C8BD948B8EFCDAB89674523014439C0C3")]);
+    equipment.ExecutablePage();
+    var equipmentAllocation = Activator.CreateInstance(memory)!;
+    long equipmentRoute = (long)memory.GetProperty("Address")!.GetValue(equipmentAllocation)!;
+    IHook<Shape> equipmentHook;
+    unsafe { equipmentHook = ReloadedHooks.Instance.CreateHook<Shape>((void*)equipmentRoute, (long)equipment.Address); }
+    var equipmentCode = (byte[])routes.GetMethod("BuildSwordLimitEquipment")!.Invoke(null,
+        new object[] { (long)equipmentHook.OriginalFunctionAddress, (long)commandMap.Address })!;
+    memory.GetMethod("CompleteShape")!.Invoke(equipmentAllocation, new object[] { equipmentCode });
+    TestUnwind(equipmentRoute, equipmentCode.Length);
+    equipmentHook.Activate();
+    int checkedCalls = 0;
+    try
+    {
+        foreach (bool populated in new[] { false, true })
+        {
+            byte[] map = new byte[256];
+            if (populated) map[163] = 1;
+            commandMap.Write(0, map);
+            foreach (bool secondary in new[] { false, true })
+            for (int command = 0; command < 256; command++)
+            for (int flags = 0; flags < 256; flags++)
+            {
+                byte[] unitSeed = Enumerable.Repeat((byte)0xCC, 512).ToArray();
+                unitSeed[0x12] = secondary ? (byte)41 : (byte)command;
+                unitSeed[0x192] = secondary ? (byte)command : (byte)41;
+                equipmentUnit.Write(0, unitSeed);
+                palette.Write(0, [(byte)flags]);
+                capture(equipmentHook.OriginalFunctionAddress, equipmentUnit.Address, palette.Address, 0xA3, expected.Address);
+                byte[] nativeUnit = equipmentUnit.Read(0, 512);
+                byte wantedFlags = (byte)(populated && command == 163 && (flags & 8) != 0 ? flags | 4 : flags);
+                nativeUnit[0x1B6] = wantedFlags;
+                equipmentUnit.Write(0, unitSeed);
+                capture(equipment.Address, equipmentUnit.Address, palette.Address, 0xA3, actual.Address);
+                Require(actual.Read(0, 320).SequenceEqual(expected.Read(0, 320)), "Sword Limit destroyed original GP/flags/SIMD post-call state");
+                Require(equipmentUnit.Read(0, 512).SequenceEqual(nativeUnit), "Sword Limit changed unexpected unit fields or bypassed the sword requirement");
+                Require(palette.Read(0, 1)[0] == flags, "Original equipment argument modified");
+                checkedCalls++;
+                if (checkedCalls % 16384 == 0) { GC.Collect(); GC.WaitForPendingFinalizers(); }
+            }
+            Require(commandMap.Read(0, 256).SequenceEqual(map), "Sword command lookup was mutated");
+        }
+        equipmentHook.Disable();
+        capture(equipment.Address, equipmentUnit.Address, palette.Address, 0xA3, actual.Address);
+        capture(equipmentHook.OriginalFunctionAddress, equipmentUnit.Address, palette.Address, 0xA3, expected.Address);
+        Require(actual.Read(0, 320).SequenceEqual(expected.Read(0, 320)), "Disabled equipment route changed native behavior");
+        equipmentHook.Enable();
+        Console.WriteLine($"PASS: {checkedCalls} production sword-equipment detour calls: every equipment flag/command byte, primary/secondary, empty/registered maps; Rune Sword/KnightSword/FellSword enabled, no-sword rejected, Cloud 41 unchanged. Private GP/flags/SIMD, native arguments, unrelated unit fields, immutable lookup and Windows unwind preserved.");
+    }
+    finally
+    {
+        if (equipmentHook.IsHookEnabled) equipmentHook.Disable();
+        GC.KeepAlive(equipmentHook); GC.KeepAlive(equipmentAllocation);
+    }
+}
+
 static byte[] CaptureCaller()
 {
     var bytes = new List<byte>();
