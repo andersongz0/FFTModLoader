@@ -23,6 +23,7 @@ public partial class Mod
     private nint _visualTables;
     private bool _visualReady;
     private IHook<ResolveShapeDelegate>? _resolveShape;
+    private NativeJobRouteMemory? _shapeRoute;
     private IHook<ReadSpriteDelegate>? _readSprite;
     private IHook<DecodeVisualPageDelegate>? _decodeVisualPage;
     private IHook<UnloadVisualPageDelegate>? _unloadVisualPage;
@@ -97,7 +98,7 @@ public partial class Mod
         return bytes;
     }
 
-    private void InstallVisualExpansion()
+    private unsafe void InstallVisualExpansion()
     {
         var applied = new List<VisualPatch>();
         try
@@ -162,6 +163,11 @@ public partial class Mod
                     Marshal.WriteInt32(table, entry.ShapeId * 8 + 4, 45056);
                 }
             }
+            // Immutable native lookup; zero means leave the native shape alone.
+            // No CLR transition/dictionary access is allowed on this battle leaf.
+            nint shapeRegistrations = _visualTables + 0x4000;
+            foreach (var entry in _visualJobs.Values)
+                Marshal.WriteByte(shapeRegistrations, entry.JobId * 2 + entry.Sex - 0x80, checked((byte)entry.ShapeId));
             // Every known indexed/RIP-relative consumer, including individual
             // animation-record fields (+1,+2,+3), must follow the expanded table.
             var plan = new List<VisualPatch>();
@@ -192,7 +198,9 @@ public partial class Mod
 
             // Create all detours before mutating anything. Keep their lifetimes
             // for the entire game session; these resources cannot be unloaded.
-            _resolveShape = _hooks.CreateHook<ResolveShapeDelegate>(ResolveVisualShape, (long)_gameBase + 0x278EDC);
+            _shapeRoute = new NativeJobRouteMemory();
+            _resolveShape = _hooks.CreateHook<ResolveShapeDelegate>((void*)_shapeRoute.Address, (long)_gameBase + 0x278EDC);
+            _shapeRoute.CompleteShape(NativeJobRoutes.BuildShape(_resolveShape.OriginalFunctionAddress, (long)shapeRegistrations));
             _readSprite = _hooks.CreateHook<ReadSpriteDelegate>(ReadVisualSprite, (long)_gameBase + 0x2F40C4);
             _loadG2D = _hooks.CreateHook<LoadG2DDelegate>(LoadG2DHook, (long)_gameBase + 0x3D2450);
             _decodeVisualPage = _hooks.CreateHook<DecodeVisualPageDelegate>(DecodeVisualPage, (long)_gameBase + 0x3D25D8);
@@ -216,6 +224,7 @@ public partial class Mod
             _visualReady = true;
             _menuPortrait.Activate();
             _resolveShape.Activate(); // Resolver is last: only expose fully ready new shapes.
+            _logger.WriteLine($"[{_modConfig.ModId}] [VisualExpansion] Native shape resolver: original private registers (including battle R11) preserved; no managed callback.");
             _logger.WriteLine($"[{_modConfig.ModId}] [VisualExpansion] Menu portraits: registered generic units routed to custom faces; native identities preserved.");
             _logger.WriteLine($"[{_modConfig.ModId}] [VisualExpansion] READY: {OriginalShapes} -> {ShapeCapacity} shapes; {shapes.Count} registered; {plan.Count} table/bounds redirects. Original shapes 0..169 preserved.");
         }
@@ -295,17 +304,6 @@ public partial class Mod
         Marshal.Copy((nint)address, live, 0, live.Length);
         if (!live.SequenceEqual(before)) throw new NotSupportedException($"Sprite operand changed at RVA {offset:X}; no patches applied.");
         plan.Add(new(address, before, after));
-    }
-
-    private byte ResolveVisualShape(nint unit, nint palette, byte job)
-    {
-        if (_visualReady && unit != 0 && _visualJobs.TryGetValue((job, Marshal.ReadByte(unit)), out var visual))
-        {
-            Marshal.WriteByte(palette, 0);
-            VisualTrace($"job=0x{job:X2} {visual.Gender} -> shape={visual.ShapeId}");
-            return (byte)visual.ShapeId;
-        }
-        return _resolveShape!.OriginalFunction(unit, palette, job);
     }
 
     private uint ResolveMenuPortrait(uint index, nint primitive, nint unused, nint palette)

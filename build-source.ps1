@@ -1,4 +1,4 @@
-param([string]$Configuration = 'Release')
+param([string]$Configuration = 'Release', [string]$GameExecutable, [string]$HooksRuntimeDirectory)
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath $PSScriptRoot
 & cmake -S . -B build -G 'Visual Studio 17 2022' -A x64
@@ -13,5 +13,12 @@ if ($LASTEXITCODE -ne 0) { throw 'Load-order tests failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'JobExpansion build failed.' }
 & dotnet run --project tests/JobLearnHookTests -c $Configuration
 if ($LASTEXITCODE -ne 0) { throw 'Job Learn native-return regression failed.' }
+if ($GameExecutable) {
+    # Read-only native fixture in an isolated test process; never runs the game.
+    $shapeArgs = @('run','--project','tests/NativeShapeRouteTests','-c',$Configuration)
+    if ($HooksRuntimeDirectory) { $shapeArgs += ('-p:HooksRuntimeDirectory=' + $HooksRuntimeDirectory) }
+    & dotnet @shapeArgs -- $GameExecutable
+    if ($LASTEXITCODE -ne 0) { throw 'Private native shape-register/unwind regression failed.' }
+}
 & dotnet build src/ContentExpansionModule/ContentExpansionModule.csproj -c $Configuration --nologo
 if ($LASTEXITCODE -ne 0) { throw 'ContentExpansion build failed.' }

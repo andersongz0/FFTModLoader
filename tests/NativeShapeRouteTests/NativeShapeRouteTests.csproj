@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <HooksRuntimeDirectory Condition="'$(HooksRuntimeDirectory)' == ''">C:/Program Files (x86)/Steam/steamapps/common/FINAL FANTASY TACTICS - The Ivalice Chronicles/FFTModLoader.Runtime/ResolvedMods/reloaded.sharedlib.hooks/x64</HooksRuntimeDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Reloaded.Hooks" HintPath="$(HooksRuntimeDirectory)/Reloaded.Hooks.dll" />
+    <Reference Include="Reloaded.Hooks.Definitions" HintPath="$(HooksRuntimeDirectory)/Reloaded.Hooks.Definitions.dll" />
+    <None Include="$(HooksRuntimeDirectory)/*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+    <Compile Include="../../src/JobExpansionRuntime/NativeJobRoutes.cs" Link="NativeJobRoutes.cs" />
+    <Compile Include="../NativeItemRouteTests/OwnedNativeMemory.cs" Link="OwnedNativeMemory.cs" />
+  </ItemGroup>
+</Project>

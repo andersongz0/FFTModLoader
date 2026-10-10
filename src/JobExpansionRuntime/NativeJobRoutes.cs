@@ -7,6 +7,32 @@ namespace GenericJobs;
 // CLR, allocate, log, take a managed lock or invoke a managed original delegate.
 internal static class NativeJobRoutes
 {
+    public static byte[] BuildShape(long original, long registrations)
+    {
+        var c = new Code();
+        // RVA FCAF8 uses R11 after this private leaf returns. A normal managed
+        // callback is allowed to destroy R11 and therefore is NOT compatible.
+        // Execute the real native original first, then change only its AL result
+        // for registered generic visuals. Preserve its complete GP/SIMD/flags
+        // post-call contract, not merely the standard Microsoft nonvolatiles.
+        // RBP makes the flag-preserving LEA/POP/RET a valid Windows epilogue.
+        c.Bytes("554881ECB0000000488DAC24B0000000");
+        c.Bytes("48894C24204C89442428"); // Incoming unit and byte job.
+        c.Bytes("FF1502000000EB08"); c.Long(original);
+        c.Bytes("488944243048894C243848895424404C894424484C894C24504C895424584C895C2460");
+        c.Bytes("9C584889442468"); // Preserve the original leaf's flags too.
+        c.Bytes("488B4424204885C0"); c.Jump("0F84", "shapeDone");
+        c.Bytes("0FB60881E98000000083F901"); c.Jump("0F87", "shapeDone");
+        c.Bytes("0FB64424288D0441"); // job * 2 + (generic identity - 0x80).
+        c.Bytes("49BA"); c.Long(registrations);
+        c.Bytes("410FB604024885C0"); c.Jump("0F84", "shapeDone");
+        c.Bytes("88442430"); // Only AL; palette/other native results unchanged.
+        c.Label("shapeDone");
+        c.Bytes("FF7424689D488B442430488B4C2438488B5424404C8B4424484C8B4C24504C8B5424584C8B5C2460");
+        c.Bytes("488D65005DC3"); // Restore original RBP, flags and stack.
+        return c.Finish();
+    }
+
     public static byte[] BuildLearn(long original, long jobList)
     {
         var c = new Code();
@@ -100,12 +126,19 @@ internal sealed class NativeJobRouteMemory
     }
     public void Complete(byte[] code, bool sparse)
     {
-        if (code.Length < 1 || code.Length > 4000) throw new InvalidDataException("Invalid native job route size.");
         byte[] prefix = Convert.FromHexString(sparse ? "5051524150415141524153" : "50");
+        byte[] unwind = sparse ? [1,11,7,0,11,2,9,2,7,2,5,2,3,2,2,2,1,2,0,0] : [1,1,1,0,1,2,0,0];
+        CompleteFrame(code, prefix, unwind);
+    }
+    public void CompleteShape(byte[] code) => CompleteFrame(code,
+        Convert.FromHexString("554881ECB0000000488DAC24B0000000"), [1,16,4,0xB5,16,3,8,1,22,0,1,0x50]);
+
+    private void CompleteFrame(byte[] code, byte[] prefix, byte[] unwind)
+    {
+        if (code.Length < prefix.Length || code.Length > 4000) throw new InvalidDataException("Invalid native job route size.");
         if (!code.Take(prefix.Length).SequenceEqual(prefix)) throw new InvalidDataException("Unknown native job route frame.");
         Marshal.Copy(code, 0, (nint)Address, code.Length);
         byte[] table = [..BitConverter.GetBytes(0), ..BitConverter.GetBytes(code.Length), ..BitConverter.GetBytes(4048)];
-        byte[] unwind = sparse ? [1,11,7,0,11,2,9,2,7,2,5,2,3,2,2,2,1,2,0,0] : [1,1,1,0,1,2,0,0];
         Marshal.Copy(table, 0, (nint)(Address + 4032), table.Length);
         Marshal.Copy(unwind, 0, (nint)(Address + 4048), unwind.Length);
         if (!VirtualProtect((nint)Address,4096,0x20,out _) ||
