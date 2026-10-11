@@ -16,6 +16,7 @@
 #include <vector>
 #include "RuntimeLogRelay.h"
 #include "ModLoadOrder.h"
+#include "LauncherConsole.h"
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
@@ -204,91 +205,6 @@ namespace
         return exitCode == STILL_ACTIVE;
     }
 
-    bool IsProcessRunning(const wchar_t* executableName)
-    {
-        HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-        if (snapshot == INVALID_HANDLE_VALUE)
-            return false;
-
-        PROCESSENTRY32W entry{};
-        entry.dwSize = sizeof(entry);
-        bool found = false;
-
-        if (Process32FirstW(snapshot, &entry))
-        {
-            do
-            {
-                if (_wcsicmp(entry.szExeFile, executableName) == 0)
-                {
-                    found = true;
-                    break;
-                }
-            }
-            while (Process32NextW(snapshot, &entry));
-        }
-
-        CloseHandle(snapshot);
-        return found;
-    }
-
-    bool EnsureSteamRunning()
-    {
-        if (IsProcessRunning(L"steam.exe"))
-            return true;
-
-        wchar_t programFilesX86[32768]{};
-        const DWORD length = GetEnvironmentVariableW(
-            L"ProgramFiles(x86)",
-            programFilesX86,
-            static_cast<DWORD>(std::size(programFilesX86))
-        );
-
-        fs::path steamExe = length > 0
-            ? fs::path(programFilesX86) / L"Steam" / L"steam.exe"
-            : fs::path(L"C:\\Program Files (x86)\\Steam\\steam.exe");
-
-        if (!fs::exists(steamExe))
-            return false;
-
-        std::wstring commandLine = L"\"" + steamExe.wstring() + L"\" -silent";
-        STARTUPINFOW startup{};
-        startup.cb = sizeof(startup);
-        PROCESS_INFORMATION processInfo{};
-
-        std::wcout << L"[FFTModLoader] Iniciando o Steam...\n";
-
-        if (!CreateProcessW(
-                steamExe.c_str(),
-                commandLine.data(),
-                nullptr,
-                nullptr,
-                FALSE,
-                0,
-                nullptr,
-                steamExe.parent_path().c_str(),
-                &startup,
-                &processInfo))
-        {
-            return false;
-        }
-
-        CloseHandle(processInfo.hThread);
-        CloseHandle(processInfo.hProcess);
-
-        for (int attempt = 0; attempt < 300; ++attempt)
-        {
-            if (IsProcessRunning(L"steam.exe"))
-            {
-                Sleep(2000);
-                return true;
-            }
-
-            Sleep(100);
-        }
-
-        return false;
-    }
-
     std::string ToUtf8(const std::wstring& value)
     {
         if (value.empty())
@@ -373,7 +289,8 @@ namespace
 
     bool WaitForRuntimeInitialization(
         HANDLE process,
-        const fs::path& bootstrapperLog
+        const fs::path& bootstrapperLog,
+        const std::function<void()>& pumpContent
     )
     {
         constexpr int timeoutMilliseconds = 30000;
@@ -386,6 +303,7 @@ namespace
              elapsed < timeoutMilliseconds;
              elapsed += pollMilliseconds)
         {
+            pumpContent(); // report registration/application BEFORE ready
             if (!IsProcessAlive(process))
                 return false;
 
@@ -393,6 +311,7 @@ namespace
             if (log.find("Reloaded managed entry point completed") !=
                 std::string::npos)
             {
+                pumpContent();
                 std::wcout
                     << L"[FFTModLoader] Runtime e mods inicializados.\n";
                 return true;
@@ -953,6 +872,7 @@ static bool RunModPacker(
 
 int wmain(int argc, wchar_t** argv)
 {
+    ConfigureLiveLauncherConsole();
     std::vector<wchar_t> modulePath(32768);
 
     const DWORD len =
@@ -982,7 +902,7 @@ int wmain(int argc, wchar_t** argv)
         baseDir / L"FFT_enhanced.exe";
 
     std::wcout
-        << L"FFTModLoader 0.11.7-rc.9 - ZeroDS - Runtime independente integrado\n"
+        << L"FFTModLoader 0.11.7 - ZeroDS - Runtime independente integrado\n"
         << L"Projeto: https://github.com/andersongz0/FFTModLoader\n";
 
     std::wcout
@@ -1074,16 +994,6 @@ int wmain(int argc, wchar_t** argv)
         return 0;
     }
 
-    if (!EnsureSteamRunning())
-    {
-        std::wcerr
-            << L"[ERRO] O Steam nao esta aberto e nao foi possivel inicia-lo.\n"
-            << L"[ERRO] Abra o Steam, entre na sua conta e tente novamente.\n";
-        return 5;
-    }
-
-    std::wcout << L"[FFTModLoader] Steam pronto.\n";
-
     std::wstring commandLine =
         L"\"" + gameExe.wstring() + L"\"";
 
@@ -1124,6 +1034,9 @@ int wmain(int argc, wchar_t** argv)
         MultiByteToWideChar(CP_UTF8,0,line.data(),static_cast<int>(line.size()),wide.data(),length);
         std::wcout << wide << L"\n" << std::flush;
     };
+    const auto pumpContent = [&] { contentLog.Drain(showContent); };
+    std::wcout << L"[Conteudo] Registrado = recurso encontrado; Aplicando = alteracao em processamento; "
+                  L"Carregado = confirmacao recebida do runtime.\n";
 
     if (!CreateProcessW(
             gameExe.c_str(),
@@ -1174,9 +1087,11 @@ int wmain(int argc, wchar_t** argv)
         return 6;
     }
 
+    std::wcout << L"[FFTModLoader] Runtime integrado injetado.\n";
+
     if (!WaitForRuntimeInitialization(
             processInfo.hProcess,
-            bootstrapperLog))
+            bootstrapperLog,pumpContent))
     {
         std::wcerr
             << L"[ERRO] O jogo nao sera liberado com os mods incompletos.\n";
@@ -1186,10 +1101,11 @@ int wmain(int argc, wchar_t** argv)
         return 7;
     }
 
+    if(!contentLog.HasReceivedContent())
+        std::wcerr << L"[Aviso] O runtime iniciou, mas o canal de detalhes ainda nao respondeu. O console continuara tentando ler o log da sessao.\n";
+
     const DWORD resumeResult = ResumeThread(processInfo.hThread);
-    std::wcout << L"[Conteudo] Registro = recurso encontrado; Aplicando = alteracao em processamento; "
-                  L"Carregado = confirmacao recebida do runtime.\n";
-    contentLog.Pump(showContent);
+    pumpContent();
 
     if (resumeResult == static_cast<DWORD>(-1))
     {
@@ -1198,6 +1114,10 @@ int wmain(int argc, wchar_t** argv)
                L"do jogo nao pode ser retomada: "
             << GetLastErrorMessage(GetLastError())
             << L"\n";
+        TerminateProcess(processInfo.hProcess,1);
+        CloseHandle(processInfo.hThread);
+        CloseHandle(processInfo.hProcess);
+        return 8;
     }
     else
     {
@@ -1206,7 +1126,6 @@ int wmain(int argc, wchar_t** argv)
     }
 
     std::wcout
-        << L"[FFTModLoader] Runtime integrado injetado.\n"
         << L"[FFTModLoader] Inicializacao concluida. O conteudo sera confirmado abaixo conforme utilizado.\n";
 
     CloseHandle(processInfo.hThread);
@@ -1224,10 +1143,10 @@ int wmain(int argc, wchar_t** argv)
             DWORD waitResult;
             do
             {
-                contentLog.Pump(showContent);
-                waitResult = WaitForSingleObject(processInfo.hProcess,500);
+                pumpContent();
+                waitResult = WaitForSingleObject(processInfo.hProcess,100);
             } while (waitResult == WAIT_TIMEOUT);
-            contentLog.Pump(showContent);
+            pumpContent();
 
             DWORD gameExitCode = 0;
 

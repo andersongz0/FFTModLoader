@@ -9,7 +9,7 @@ This does not install files into the game or change saves.
 - `src/ContentExpansionApi`: shared controller contract.
 - `src/ContentExpansionModule`: loader-owned provider, compiling Core/Runtime sources.
 - `src/ContentExpansionCore`, `Runtime`, `Native`: tables, formulas, saves, native routes and bridge.
-- `tools/build_native_bridge.ps1`: native bridge build; release rc.1 uses the byte-identical approved v5 bridge.
+- `tools/build_native_bridge.ps1`: native bridge build.
 - `vendor/Reloaded-II`: full locally modified corresponding runtime source, with original GPL license.
 
 For integration tests, check out ReworkedChemist as well and pass

@@ -26,12 +26,26 @@ try
     string manifest = Path.Combine(fixture, "FFTModLoader.jobs.json");
     File.WriteAllText(manifest, "{\"SchemaVersion\":1,\"JobIds\":[160,161,162,163,162],\"RequiresGenericJobsContent\":true}");
     Equal(knights, JobActivationPolicy.ReadRegisteredJobs([fixture]), "manifest discovery and deduplication");
+    File.WriteAllText(manifest, "{\"SchemaVersion\":1,\"JobIds\":[174],\"Requirements\":[{\"JobId\":174,\"NativeJobIds\":[0,3,11],\"Levels\":[4,4,4]}]}");
+    var requirements = JobActivationPolicy.ReadRequirements([fixture]);
+    if (!requirements.TryGetValue(174, out var bestial) || !JobActivationPolicy.Meets(bestial, [0x40,0x04,0,0,0,0x04,0,0,0,0,0,0]))
+        throw new Exception("Numeric prerequisite arrays were not accepted.");
+    Console.WriteLine("PASS: numeric prerequisite arrays preserve existing generic-job startup");
+    File.WriteAllText(manifest, "{\"SchemaVersion\":1,\"JobIds\":[174],\"Requirements\":[{\"JobId\":174,\"NativeJobIds\":\"AAML\",\"Levels\":\"BAQE\"}]}");
+    if (!JobActivationPolicy.ReadRequirements([fixture]).ContainsKey(174))
+        throw new Exception("Legacy base64 prerequisite arrays were not accepted.");
+    Console.WriteLine("PASS: legacy base64 prerequisite arrays remain compatible");
     string builtInDirectory = Path.Combine(fixture, "BuiltIn");
     Directory.CreateDirectory(builtInDirectory);
     File.WriteAllText(Path.Combine(builtInDirectory, "FFTModLoader.jobs.json"), "{\"SchemaVersion\":1,\"JobIds\":[160,161]}");
     File.WriteAllText(manifest, "{\"SchemaVersion\":1,\"JobIds\":[162,163]}");
     Equal(knights, JobActivationPolicy.ReadRegisteredJobs([builtInDirectory, fixture]), "base and Knights register distinct classes in menu order");
     Equal(builtIn, JobActivationPolicy.ReadRegisteredJobs([builtInDirectory]), "removing Knights preserves built-in registration");
+    string bestialDirectory = Path.Combine(fixture, "Bestial");
+    Directory.CreateDirectory(bestialDirectory);
+    File.WriteAllText(Path.Combine(bestialDirectory, "FFTModLoader.jobs.json"), "{\"SchemaVersion\":1,\"JobIds\":[174]}");
+    Equal([160,161,162,163,174], JobActivationPolicy.ReadRegisteredJobs([bestialDirectory, fixture, builtInDirectory]),
+        "Bestial follows Holy and Rune regardless of mod discovery order");
     foreach (string invalid in new[] { "{\"SchemaVersion\":2,\"JobIds\":[162]}", "{\"SchemaVersion\":1,\"JobIds\":[256]}", "{\"SchemaVersion\":1,\"JobIds\":null}" })
     {
         File.WriteAllText(manifest, invalid);
@@ -65,6 +79,8 @@ finally
 {
     File.Delete(Path.Combine(fixture, "FFTModLoader.jobs.json"));
     File.Delete(Path.Combine(fixture, "BuiltIn", "FFTModLoader.jobs.json"));
+    File.Delete(Path.Combine(fixture, "Bestial", "FFTModLoader.jobs.json"));
+    Directory.Delete(Path.Combine(fixture, "Bestial"));
     if (Directory.Exists(Path.Combine(fixture, "BuiltIn"))) Directory.Delete(Path.Combine(fixture, "BuiltIn"));
     Directory.Delete(fixture);
 }

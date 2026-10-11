@@ -121,3 +121,13 @@ NativeCommandItemTests.Run(menuActions, itemActions);
 ExpandedSaveTests.Run(keys);
 ChemistActionBindingsTests.Run();
 NativePartySaveCommitTests.Run();
+ulong fixtureSteamAccount=123456789;
+Require(SaveProfileIdentity.Resolve(fixtureSteamAccount,null)==ExpandedSaveRegistry.Hash(BitConverter.GetBytes(fixtureSteamAccount)),
+    "Existing Steam save namespace changed");
+string localProfile=SaveProfileIdentity.Resolve(null,"S-1-5-21-fixture-1001");
+Require(localProfile==SaveProfileIdentity.Resolve(0,"S-1-5-21-fixture-1001"),"Local profile is not stable");
+Require(localProfile!=SaveProfileIdentity.Resolve(null,"S-1-5-21-fixture-1002"),"Local users share a save namespace");
+Require(localProfile!=SaveProfileIdentity.Resolve(fixtureSteamAccount,"S-1-5-21-fixture-1001"),"Steam/local profile namespaces collide");
+Reject(()=>SaveProfileIdentity.Resolve(null,null));
+Reject(()=>SaveProfileIdentity.Resolve(null,"  "));
+Console.WriteLine("PASS: stable local save profile without Steam; existing Steam namespaces preserved and separate Windows users isolated.");

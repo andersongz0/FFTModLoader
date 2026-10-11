@@ -100,7 +100,7 @@ extern "C" void ObserveBridge(BridgeContext* context,void* frame) {
     ReleaseSRWLockExclusive(&saveLock);
 }
 extern "C" {
-__declspec(align(64)) BridgeContext NativeBridgeContexts[64] = {};
+__declspec(align(64)) BridgeContext NativeBridgeContexts[128] = {};
 #define DECLARE(n) void Bridge##n();
 DECLARE(0) DECLARE(1) DECLARE(2) DECLARE(3) DECLARE(4) DECLARE(5) DECLARE(6) DECLARE(7)
 DECLARE(8) DECLARE(9) DECLARE(10) DECLARE(11) DECLARE(12) DECLARE(13) DECLARE(14) DECLARE(15)
@@ -110,9 +110,10 @@ DECLARE(32) DECLARE(33) DECLARE(34) DECLARE(35) DECLARE(36) DECLARE(37) DECLARE(
 DECLARE(40) DECLARE(41) DECLARE(42) DECLARE(43) DECLARE(44) DECLARE(45) DECLARE(46) DECLARE(47)
 DECLARE(48) DECLARE(49) DECLARE(50) DECLARE(51) DECLARE(52) DECLARE(53) DECLARE(54) DECLARE(55)
 DECLARE(56) DECLARE(57) DECLARE(58) DECLARE(59) DECLARE(60) DECLARE(61) DECLARE(62) DECLARE(63)
+DECLARE(64) DECLARE(65) DECLARE(66) DECLARE(67) DECLARE(68) DECLARE(69) DECLARE(70) DECLARE(71) DECLARE(72) DECLARE(73) DECLARE(74) DECLARE(75) DECLARE(76) DECLARE(77) DECLARE(78) DECLARE(79) DECLARE(80) DECLARE(81) DECLARE(82) DECLARE(83) DECLARE(84) DECLARE(85) DECLARE(86) DECLARE(87) DECLARE(88) DECLARE(89) DECLARE(90) DECLARE(91) DECLARE(92) DECLARE(93) DECLARE(94) DECLARE(95) DECLARE(96) DECLARE(97) DECLARE(98) DECLARE(99) DECLARE(100) DECLARE(101) DECLARE(102) DECLARE(103) DECLARE(104) DECLARE(105) DECLARE(106) DECLARE(107) DECLARE(108) DECLARE(109) DECLARE(110) DECLARE(111) DECLARE(112) DECLARE(113) DECLARE(114) DECLARE(115) DECLARE(116) DECLARE(117) DECLARE(118) DECLARE(119) DECLARE(120) DECLARE(121) DECLARE(122) DECLARE(123) DECLARE(124) DECLARE(125) DECLARE(126) DECLARE(127)
 #undef DECLARE
 }
-static void (*const bridges[64])() = {
+static void (*const bridges[128])() = {
 #define ENTRY(n) Bridge##n,
 ENTRY(0) ENTRY(1) ENTRY(2) ENTRY(3) ENTRY(4) ENTRY(5) ENTRY(6) ENTRY(7)
 ENTRY(8) ENTRY(9) ENTRY(10) ENTRY(11) ENTRY(12) ENTRY(13) ENTRY(14) ENTRY(15)
@@ -122,15 +123,17 @@ ENTRY(32) ENTRY(33) ENTRY(34) ENTRY(35) ENTRY(36) ENTRY(37) ENTRY(38) ENTRY(39)
 ENTRY(40) ENTRY(41) ENTRY(42) ENTRY(43) ENTRY(44) ENTRY(45) ENTRY(46) ENTRY(47)
 ENTRY(48) ENTRY(49) ENTRY(50) ENTRY(51) ENTRY(52) ENTRY(53) ENTRY(54) ENTRY(55)
 ENTRY(56) ENTRY(57) ENTRY(58) ENTRY(59) ENTRY(60) ENTRY(61) ENTRY(62) ENTRY(63)
+ENTRY(64) ENTRY(65) ENTRY(66) ENTRY(67) ENTRY(68) ENTRY(69) ENTRY(70) ENTRY(71) ENTRY(72) ENTRY(73) ENTRY(74) ENTRY(75) ENTRY(76) ENTRY(77) ENTRY(78) ENTRY(79) ENTRY(80) ENTRY(81) ENTRY(82) ENTRY(83) ENTRY(84) ENTRY(85) ENTRY(86) ENTRY(87) ENTRY(88) ENTRY(89) ENTRY(90) ENTRY(91) ENTRY(92) ENTRY(93) ENTRY(94) ENTRY(95) ENTRY(96) ENTRY(97) ENTRY(98) ENTRY(99) ENTRY(100) ENTRY(101) ENTRY(102) ENTRY(103) ENTRY(104) ENTRY(105) ENTRY(106) ENTRY(107) ENTRY(108) ENTRY(109) ENTRY(110) ENTRY(111) ENTRY(112) ENTRY(113) ENTRY(114) ENTRY(115) ENTRY(116) ENTRY(117) ENTRY(118) ENTRY(119) ENTRY(120) ENTRY(121) ENTRY(122) ENTRY(123) ENTRY(124) ENTRY(125) ENTRY(126) ENTRY(127)
 #undef ENTRY
 };
 extern "C" __declspec(dllexport) void* GetBridgeAddress(unsigned index) {
-    return index < 64 ? reinterpret_cast<void*>(bridges[index]) : nullptr;
+    return index < 128 ? reinterpret_cast<void*>(bridges[index]) : nullptr;
 }
+extern "C" __declspec(dllexport) unsigned GetBridgeCapacity() { return 128; }
 // Publish once, before enabling a detour. Contexts remain valid for process lifetime.
 extern "C" __declspec(dllexport) int ConfigureBridge(unsigned index, void* original,
                                                       void* callback, unsigned stackArguments) {
-    if (index >= 64 || !original || !callback || stackArguments > 4 ||
+    if (index >= 128 || !original || !callback || stackArguments > 4 ||
         NativeBridgeContexts[index].original) return 0;
     int cpu[4];
     __cpuid(cpu, 1);
@@ -145,7 +148,7 @@ extern "C" __declspec(dllexport) int ConfigureBridge(unsigned index, void* origi
     return 1;
 }
 extern "C" __declspec(dllexport) int SetBridgeSaveDispatch(unsigned index) {
-    if(index>=64 || !NativeBridgeContexts[index].original)return 0;
+    if(index>=128 || !NativeBridgeContexts[index].original)return 0;
     if(!InitOnceExecuteOnce(&saveInit,InitializeSaveThread,nullptr,nullptr))return 0;
     NativeBridgeContexts[index].reserved=1;return 1;
 }
@@ -162,7 +165,7 @@ extern "C" __declspec(dllexport) int CompleteSaveObserver() {
     return SetEvent(saveDone)?1:0;
 }
 extern "C" __declspec(dllexport) int SetBridgeGameplayDispatch(unsigned index) {
-    if(index>=64 || !NativeBridgeContexts[index].original ||
+    if(index>=128 || !NativeBridgeContexts[index].original ||
        !InitOnceExecuteOnce(&gameplayInit,InitializeGameplay,nullptr,nullptr))return 0;
     NativeBridgeContexts[index].reserved=2;return 1;
 }

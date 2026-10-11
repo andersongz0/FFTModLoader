@@ -41,6 +41,7 @@ namespace GenericJobs
         // Cached extra jobs
         private ushort[] _extraJobs = Array.Empty<ushort>();
         private ushort[] _registeredJobs = Array.Empty<ushort>();
+        private IReadOnlyDictionary<ushort,JobActivationPolicy.Requirement> _jobRequirements = new Dictionary<ushort,JobActivationPolicy.Requirement>();
 
         // State tracking
         private ushort[] _originalJobList = new ushort[MaxJobs]; // Store original jobs
@@ -188,6 +189,8 @@ namespace GenericJobs
                 var enabledMods = _modLoader.GetAppConfig().EnabledMods;
                 string gameDirectory = Path.GetDirectoryName(mainModule.FileName)!;
                 _registeredJobs = JobActivationPolicy.ReadRegisteredJobs(enabledMods.Select(id =>
+                    ModDirectoryResolver.Resolve(gameDirectory, id, _modLoader.GetDirectoryForModId)));
+                _jobRequirements = JobActivationPolicy.ReadRequirements(enabledMods.Select(id =>
                     ModDirectoryResolver.Resolve(gameDirectory, id, _modLoader.GetDirectoryForModId)));
                 _extraJobs = ParseExtraJobs();
                 ValidateVisualCapacity(Path.GetDirectoryName(mainModule.FileName)!); // Validate staged mods BEFORE hooks; later mods are not registered yet.
@@ -665,7 +668,10 @@ namespace GenericJobs
             int extraJobEnd = PageTwoExtraJobStart + CurrentExtraCount;
             bool isExtraJob = _pageOffset > 0 && index >= PageTwoExtraJobStart && index < extraJobEnd;
 
-            if (isExtraJob && *(int*)(jobData + 0x44) < 1)
+            ushort job=(ushort)*(int*)(jobData+0x48);
+            if(isExtraJob && !MeetsRegisteredRequirements(job))
+                *(int*)(jobData+0x44)=0;
+            else if (isExtraJob && *(int*)(jobData + 0x44) < 1)
                 *(int*)(jobData + 0x44) = 1;
 
             _populateJobMenuSlot!.OriginalFunction(a1, jobData, index);
@@ -683,6 +689,7 @@ namespace GenericJobs
             if (_jobList != 0 && selectedIndex >= 0 && selectedIndex < MaxJobsPerPage)
             {
                 ushort selectedJob = ((ushort*)_jobList)[selectedIndex];
+                if(!MeetsRegisteredRequirements(selectedJob))return;
                 _pendingVisualJob = selectedJob;
                 if (selectedJob is >= 0xA0 and <= 0xA3)
                 {
@@ -695,6 +702,15 @@ namespace GenericJobs
             }
 
             _handleJobMenuClick?.OriginalFunction(a1, a2, a3);
+        }
+
+        private unsafe bool MeetsRegisteredRequirements(ushort job)
+        {
+            if(!_jobRequirements.TryGetValue(job,out var requirement))return true;
+            int selected=*(short*)((nint)_gameBase+0x1811428);
+            if(selected is <0 or >=54)return false;
+            nint unit=*((nint*)((nint)_gameBase+0x1800F50)+selected);
+            return unit!=0 && JobActivationPolicy.Meets(requirement,new ReadOnlySpan<byte>((void*)(unit+0xBD),12));
         }
 
         private void HandleJobMenuStateHook(nint a1, nint a2, uint a3, int a4, int state)
@@ -773,6 +789,8 @@ namespace GenericJobs
             _jobAbilityList = _hooks!.CreateHook<JobAbilityListDelegate>((void*)_jobAbilityRoute.Address, address);
             _jobAbilityRoute.Complete(NativeJobRoutes.BuildLearn(_jobAbilityList.OriginalFunctionAddress, _jobList), false);
             _jobAbilityList.Activate();
+            var live=new byte[14];Marshal.Copy((nint)address,live,0,live.Length);
+            _ownedComposableEntries.Add(checked((int)(address-(long)_gameBase)),live);
         }
 
         private unsafe int HandleTeleportAnimationHook(nint a1)

@@ -4,11 +4,39 @@ using System.Text.Json;
 using System.Runtime.InteropServices;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Hooks.Definitions.X64;
+using FFTModLoader.ContentExpansion.Api;
 
 namespace GenericJobs;
 
-public partial class Mod
+public partial class Mod : IExpandedJobVisuals
 {
+    private readonly Dictionary<int,byte[]> _ownedVisualHelperEntries = new();
+    private readonly Dictionary<int,byte[]> _ownedComposableEntries = new();
+    public byte[]? GetOwnedHookEntry(int rva)
+    {
+        if(!_ownedComposableEntries.TryGetValue(rva,out var expected))return null;
+        var live=new byte[expected.Length];Marshal.Copy((nint)((long)_gameBase+rva),live,0,live.Length);
+        if(!live.SequenceEqual(expected))throw new InvalidDataException("Owned menu hook was changed by another component.");
+        return expected.ToArray();
+    }
+    public int VisualContractVersion=>1;
+    public ExpandedShapeResources GetRuntimeResources(byte shape)
+    {
+        lock(_visualLock)
+        {
+            var entry=_visualJobs.Values.SingleOrDefault(v=>v.ShapeId==shape);
+            if(!_visualReady || entry is null || !_visualPages.ContainsKey(entry.PageId) || !_visualPages.ContainsKey(entry.PageId+1))
+                throw new InvalidDataException("Expanded runtime shape is not ready.");
+            foreach(var pair in _ownedVisualHelperEntries)
+            {
+                var live=new byte[pair.Value.Length];
+                Marshal.Copy((nint)((long)_gameBase+pair.Key),live,0,live.Length);
+                if(!live.SequenceEqual(pair.Value))throw new InvalidDataException("Expanded sprite helper changed outside its owner.");
+            }
+            if(_ownedVisualHelperEntries.Count!=2)throw new InvalidDataException("Expanded sprite helper capabilities are incomplete.");
+            return new(shape,entry.PageId,(nint)(_gameBase+0x268E80),(nint)(_gameBase+0x268EB0));
+        }
+    }
     // Enhanced 1.0.4.0. RVAs below are guarded against the exact clean image
     // AND live operands. Never apply this layout to another executable build.
     private const string VisualImageHash = "937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5";
@@ -216,6 +244,11 @@ public partial class Mod
             _worldFace = Marshal.GetDelegateForFunctionPointer<WorldFaceDelegate>((nint)(_gameBase + 0x2E16A8));
             _menuPortrait = _hooks.CreateHook<MenuPortraitDelegate>(ResolveMenuPortrait, (long)_gameBase + 0x32AB3C);
             foreach (var patch in plan) { WriteMemory(patch.Address, patch.After); applied.Add(patch); }
+            foreach(int rva in new[]{0x268E80,0x268EB0})
+            {
+                var bytes=new byte[32];Marshal.Copy((nint)((long)_gameBase+rva),bytes,0,bytes.Length);
+                _ownedVisualHelperEntries.Add(rva,bytes);
+            }
             _readSprite.Activate();
             _unloadVisualPage.Activate();
             _decodeVisualPage.Activate();

@@ -21,6 +21,7 @@ public sealed unsafe class ChemistPlayableHost
     private readonly Action<string> _log;
     private readonly IReloadedHooks _hooksApi;
     private readonly NativeContextBridge _bridge;
+    private readonly LoaderNativeRoutes? _routes;
     private readonly List<IHook<Native>> _hooks=[];
     private readonly List<NativeLifetimeMemory> _memory=[];
     private readonly Dictionary<int,Helper> _helpers=[];
@@ -42,8 +43,8 @@ public sealed unsafe class ChemistPlayableHost
     private byte[] _exe=[];
     private PEReader? _pe;
 
-    public ChemistPlayableHost(IReloadedHooks hooks,long image,NativeContextBridge bridge,Action<string> log)
-    {_hooksApi=hooks;_image=image;_bridge=bridge;_log=log;}
+    public ChemistPlayableHost(IReloadedHooks hooks,long image,NativeContextBridge bridge,Action<string> log,LoaderNativeRoutes? routes=null)
+    {_hooksApi=hooks;_image=image;_bridge=bridge;_log=log;_routes=routes;}
     private NativeLifetimeMemory Own(int size,bool near=false)
     {var m=new NativeLifetimeMemory(size,near?_image:0);_memory.Add(m);return m;}
     private byte[] Read(long address,int length)=>CheckedNativeRead.Read(address,length);
@@ -88,12 +89,25 @@ public sealed unsafe class ChemistPlayableHost
     }
     private void Guard(int rva)
     {
+        if(_routes is not null){_routes.Guard(rva);return;}
         var section=_pe!.PEHeaders.SectionHeaders.Single(s=>s.VirtualAddress<=rva && rva+14<=s.VirtualAddress+s.SizeOfRawData);
         byte[] bytes=_exe.AsSpan(section.PointerToRawData+rva-section.VirtualAddress,14).ToArray();
         if(!Read(_image+rva,14).SequenceEqual(bytes))throw new InvalidDataException($"Conflicting native hook at {rva:X}; integration refused.");
     }
     private void Bind(int rva,uint stack,NativeContextBridge.Observer observer,bool isolateSave=false,bool selectionGate=false)
     {
+        if(_routes is not null)
+        {
+            NativeContextBridge.Observer routedObserver=f=>
+            {
+                if(!_active)return;
+                try{observer(f);}
+                catch(Exception ex){_session.Block($"{rva:X}: {ex.Message}");if(f->Phase==0)f->Skip(-1);else f->ReplaceResult(-1);}
+            };
+            _routes.Observe(rva,stack,routedObserver,ex=>_session.Block(ex.Message),isolateSave,
+                selectionGate?NativeChemistAiAvailability.BuildSelectionGate:null);
+            return;
+        }
         Guard(rva);
         long observerAddress=(long)_bridge.ReserveAddress();
         var gate=selectionGate?Own(4096):null;
@@ -111,6 +125,7 @@ public sealed unsafe class ChemistPlayableHost
     }
     private void Leaf(int rva,Func<long,byte[]> build,bool volatileFrame=false)
     {
+        if(_routes is not null){_routes.Leaf(rva,build,volatileFrame?1:0);return;}
         Guard(rva);var code=Own(4096);
         var hook=_hooksApi.CreateHook<Native>((void*)code.Address,_image+rva);
         byte[] bytes=build(hook.OriginalFunctionAddress);code.Write(0,bytes);
@@ -125,12 +140,15 @@ public sealed unsafe class ChemistPlayableHost
         ChemistRuntimePreparation.Prepare(_log);
         _pe=new PEReader(new MemoryStream(_exe,false));
         _stock=Own(NativeItemStockLeaf.StateLength);
-        _common=Own(8192,true);_common.Write(0,Read(_image+0x787F80,4096));
-        _shared=Own(2048,true);_shared.Write(0,Read(_image+0x1811470,512));
+        _common=_routes?.Tables.Common??Own(8192,true);
+        if(_routes is null)_common.Write(0,Read(_image+0x787F80,4096));
+        _shared=_routes?.Tables.UiList??Own(2048,true);
+        if(_routes is null)_shared.Write(0,Read(_image+0x1811470,512));
         _actions=Own(ChemistActionBindings.ActionCount*20);
         // Relocate only the bounded visual triplets; adjacent 6732F4 stat
         // growth and 673300 shape metadata remain owned by the original game.
-        _visual=Own(3072,true);_visual.Write(0,Read(_image+0x672DA0,0x554));
+        _visual=_routes?.Tables.Visual??Own(3072,true);
+        if(_routes is null)_visual.Write(0,Read(_image+0x672DA0,0x554));
         var itemState=Own(NativeItemCommonLeaf.StateLength);
         var medState=Own(NativeMedicineCatalog.StateLength);
         HelperAt(0x2B8C44);
@@ -197,10 +215,19 @@ public sealed unsafe class ChemistPlayableHost
 
         var writes=Relocations(Path.Combine(modDirectory,"native","playable-relocation-plan.json"));
         // Command6 is a full-width consumable action, never an item-byte path.
-        AddWrite(writes,0x67E016,[1],[0]);
-        AddWrite(writes,0x309B85,BitConverter.GetBytes(368),BitConverter.GetBytes(1024));
-        AddWrite(writes,0x309CFB,BitConverter.GetBytes(368),BitConverter.GetBytes(1024));
-        AddWrite(writes,0x309DAD,[105],[106]);
+        if(_routes is not null)
+        {
+            writes.AddRange(_routes.Tables.PlanCommandKinds());
+            _routes.Tables.CommandKinds.Write(6,[0]);
+        }
+        else AddWrite(writes,0x67E016,[1],[0]);
+        if(_routes is not null)writes.AddRange(_routes.Tables.PlanActionBounds());
+        else
+        {
+            AddWrite(writes,0x309B85,BitConverter.GetBytes(368),BitConverter.GetBytes(1024));
+            AddWrite(writes,0x309CFB,BitConverter.GetBytes(368),BitConverter.GetBytes(1024));
+            AddWrite(writes,0x309DAD,[105],[106]);
+        }
 
         Leaf(0x2847F8,p=>NativeItemStockLeaf.Build(p,_stock.Address));
         Leaf(0x2B8C44,p=>NativeItemCommonLeaf.Build(p,itemState.Address,_image));
@@ -381,9 +408,13 @@ public sealed unsafe class ChemistPlayableHost
         Leaf(0x38B34C,p=>NativeChemistAiAvailability.Build(p,_image,aiEligibility.Address,_stock.Address,aiLearning.Address),volatileFrame:true);
         try
         {
-            _save=new CompiledNativeSaveHooks(saveEvents);_save.Install(_hooksApi,_bridge,(nint)_image,executable);
+            _save=new CompiledNativeSaveHooks(saveEvents);_save.Install(_hooksApi,_bridge,(nint)_image,executable,_routes);
             foreach(var hook in _hooks)hook.Activate();
             NativeTableRelocation.Apply(writes,Read,Write);
+            _routes?.Tables.AcknowledgeRelocation();
+            _routes?.Tables.AcknowledgeActionBounds();
+            _routes?.Tables.AcknowledgeFormulaDispatch(107);
+            _routes?.Tables.AcknowledgeCommandKinds();
             foreach(var state in new[]{_stock,itemState,medState,abilityState,commandState})state.Write(0,[1]);
             _active=true;
             _log("[Conteúdo] REWORKED CHEMIST v0.2.43: fechamento completo nativo de Items limpa seleção/cursor sem desativar a lista interna. Falha anterior reproduzida no código nativo: fechamento recursivo desativava ListAction e a reabertura após cancelar alvo não restaurava essa seleção.48 ciclos de escolher/cancelar alvo/voltar e192 saídas do submenu mais192 saídas do menu anterior verificados em fixtures. Estoque, quatro janelas, progressão, dano5 +15%HPmáximo, IA, interceptação e saves preservados; confirmação em batalha pendente.");
@@ -442,6 +473,7 @@ public sealed unsafe class ChemistPlayableHost
 
     private List<GuardedNativeWrite> Relocations(string path)
     {
+        if(_routes is not null)return _routes.Tables.Plan(path);
         using var document=JsonDocument.Parse(File.ReadAllBytes(path));
         if(document.RootElement.GetProperty("ExecutableSha256").GetString()!=ImageHash)throw new InvalidDataException("Relocation manifest version differs.");
         if(!document.RootElement.GetProperty("Installable").GetBoolean() || document.RootElement.GetProperty("ReviewedFor").GetString()!="FullChemist15Actions")throw new InvalidDataException("Relocation plan has not been audited for this test.");
@@ -988,7 +1020,8 @@ public sealed unsafe class ChemistPlayableHost
     {
         foreach(int rva in new[]{0x30698C,0x308C30,0x308C70,0x306BD0,0x308C98})Guard(rva);
         HelperAt(0x305554);HelperAt(0x306224);
-        var table=Own(108*8,true);table.Write(0,Read(_image+0x682BC8,107*8));
+        var table=_routes?.Tables.Formulas??Own(108*8,true);
+        if(_routes is null)table.Write(0,Read(_image+0x682BC8,107*8));
         long stub=(long)_bridge.ReserveAddress();
         NativeContextBridge.Observer observer=f=>
         {
@@ -1027,6 +1060,8 @@ public sealed unsafe class ChemistPlayableHost
         };
         _bridge.Bind((nint)(_image+0x30698C),0,observer,ex=>_session.Block(ex.Message));
         table.Write(107*8,BitConverter.GetBytes(stub));
+        if(_routes is not null)
+        { writes.AddRange(_routes.Tables.PlanFormulaDispatch(107));return; }
         // Only the independently decoded indexed CALL operand is relocated.
         byte[] instruction=Read(_image+0x309F53,8);
         if(Convert.ToHexString(instruction)!="41FF94C4C82B6800")throw new InvalidDataException("Formula dispatch instruction differs.");

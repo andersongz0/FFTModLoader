@@ -8,6 +8,7 @@
     <AssemblyName>FFTModLoader.ContentExpansion.Runtime</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../ContentExpansionApi/ContentExpansionApi.csproj" />
     <ProjectReference Include="../ContentExpansionCore/ContentExpansionCore.csproj" />
     <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
   </ItemGroup>

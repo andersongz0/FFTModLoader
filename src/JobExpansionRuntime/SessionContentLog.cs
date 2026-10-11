@@ -33,7 +33,9 @@ public partial class Mod
     }
 
     private static bool ContentMessage(string text) => text.Contains("[VisualExpansion]") || text.Contains("[ExpansionConfig]") ||
-        text.Contains("[NxdExpansion]") || text.Contains("nex table") || text.Contains("Applying ") ||
+        text.Contains("[NxdExpansion]") || text.Contains("[RuntimeSession]") || text.Contains("[BestialWarrior]") ||
+        text.Contains("[ReworkedChemist]") || text.Contains("Registered Sword Limit") ||
+        text.Contains("nex table") || text.Contains("Applying ") ||
         text.Contains("Adding file '") || text.Contains("modded") ||
         text.Contains("[Error]") || text.Contains("[Warning]") || text.Contains("[ERROR]");
 }

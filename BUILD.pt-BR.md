@@ -9,7 +9,7 @@ Isso não instala nada no jogo nem altera saves.
 - `src/ContentExpansionApi`: contrato compartilhado.
 - `src/ContentExpansionModule`: provedor integrado, compilando fontes Core/Runtime.
 - `src/ContentExpansionCore`, `Runtime`, `Native`: tabelas, fórmulas, saves, rotas nativas e bridge.
-- `tools/build_native_bridge.ps1`: compila o bridge; rc.1 usa o bridge v5 aprovado, idêntico byte a byte.
+- `tools/build_native_bridge.ps1`: compila o bridge nativo.
 - `vendor/Reloaded-II`: código completo do runtime com modificações locais e licença GPL original.
 
 Para os testes de integração, obtenha também o código de ReworkedChemist e passe

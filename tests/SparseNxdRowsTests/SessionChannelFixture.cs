@@ -20,11 +20,17 @@ public partial class Mod
             instance._logger.WriteLine("unrelated scanner noise");
             instance._logger.WriteLine("[ExpansionConfig] Validated capacities: menu=21, sprites=70");
             instance._logger.WriteLine("[NxdExpansion] Sparse table resolved by actual keys: rows=167, requested=170, found=True");
+            instance._logger.WriteLine("[BestialWarrior] [Runtime] installed");
+            instance._logger.WriteLine("[BestialWarrior] [Form] Wolf active");
+            instance._logger.WriteLine("[RuntimeSession] [ReworkedChemist] [Runtime] activated");
+            instance._logger.WriteLine("Registered Sword Limit");
             using var file = new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.ReadWrite);
             using var reader = new StreamReader(file);
             string text = reader.ReadToEnd();
             if (!text.Contains("Live content channel ready.") || !text.Contains("verificação") ||
-                !text.Contains("requested=170") || !text.Contains("menu=21, sprites=70") || text.Contains("scanner noise"))
+                !text.Contains("requested=170") || !text.Contains("menu=21, sprites=70") || text.Contains("scanner noise") ||
+                !text.Contains("[BestialWarrior] [Runtime]") || !text.Contains("Wolf active") ||
+                !text.Contains("[ReworkedChemist] [Runtime]") || !text.Contains("Registered Sword Limit"))
                 throw new Exception("Live session channel failed");
             Console.WriteLine("PASS: production session-channel source, logger events, UTF-8, filtering and immediate shared reads while writer remains open.");
         }

@@ -1,0 +1,1366 @@
+{
+  "ExecutableSha256": "937233F7FE76182A665C487C8802F5CEC6662DDD09967E87CD09FB146FC6B5D5",
+  "Tables": [
+    {
+      "Name": "AbilityData",
+      "SourceRva": "787F80",
+      "OriginalBytes": 4096,
+      "ExpandedBytes": 8192,
+      "ProvenanceInstructions": [],
+      "VerifiedOperands": [
+        {
+          "InstructionRva": "275A91",
+          "ExpectedInstruction": "488D81807F7800",
+          "Function": "get_ability_address",
+          "Instruction": "lea rax, [rcx + 0x787f80]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "30CD40",
+          "ExpectedInstruction": "488D0539B24700",
+          "Function": "__CheckLearnAbilityOnHit",
+          "Instruction": "lea rax, [rip + 0x47b239]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "30CE28",
+          "ExpectedInstruction": "488D0551B14700",
+          "Function": "__CheckLearnAbilityOnHit",
+          "Instruction": "lea rax, [rip + 0x47b151]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "2721B7",
+          "ExpectedInstruction": "420FB694FF827F7800",
+          "Function": "ProcessBattleCrystalMaybe",
+          "Instruction": "movzx edx, byte ptr [rdi + r15*8 + 0x787f82]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 2,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "2780DD",
+          "ExpectedInstruction": "488D0D9EFE5000",
+          "Function": "FUN_1402780b0",
+          "Instruction": "lea rcx, [rip + 0x50fe9e]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 2,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "2869D6",
+          "ExpectedInstruction": "45388CDA837F7800",
+          "Function": "GetAbilityList",
+          "Instruction": "cmp byte ptr [r10 + rbx*8 + 0x787f83], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 3,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "286A1B",
+          "ExpectedInstruction": "45388CDA837F7800",
+          "Function": "GetAbilityList",
+          "Instruction": "cmp byte ptr [r10 + rbx*8 + 0x787f83], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 3,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "28A5F7",
+          "ExpectedInstruction": "47388CC2837F7800",
+          "Function": "DrawStatus_JobAbilityListWithCosts",
+          "Instruction": "cmp byte ptr [r10 + r8*8 + 0x787f83], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 3,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "28A652",
+          "ExpectedInstruction": "47388CC2837F7800",
+          "Function": "DrawStatus_JobAbilityListWithCosts",
+          "Instruction": "cmp byte ptr [r10 + r8*8 + 0x787f83], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 3,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "28A668",
+          "ExpectedInstruction": "47388CC2837F7800",
+          "Function": "DrawStatus_JobAbilityListWithCosts",
+          "Instruction": "cmp byte ptr [r10 + r8*8 + 0x787f83], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 3,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "392776",
+          "ExpectedInstruction": "488D1506583F00",
+          "Function": "FUN_140392620",
+          "Instruction": "lea rdx, [rip + 0x3f5806]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 3,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "38AC0C",
+          "ExpectedInstruction": "41F684F4847F780008",
+          "Function": "ChangeWork",
+          "Instruction": "test byte ptr [r12 + rsi*8 + 0x787f84], 8",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "38ACFD",
+          "ExpectedInstruction": "418A8CF2847F7800",
+          "Function": "ChangeWork",
+          "Instruction": "mov cl, byte ptr [r10 + rsi*8 + 0x787f84]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "38ACC5",
+          "ExpectedInstruction": "418484F2847F7800",
+          "Function": "ChangeWork",
+          "Instruction": "test byte ptr [r10 + rsi*8 + 0x787f84], al",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "309C5E",
+          "ExpectedInstruction": "418A8CC4847F7800",
+          "Function": "BATTLE_Preformula_setup",
+          "Instruction": "mov cl, byte ptr [r12 + rax*8 + 0x787f84]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "389017",
+          "ExpectedInstruction": "418B84CC847F7800",
+          "Function": "EvaluateSanjyutsu",
+          "Instruction": "mov eax, dword ptr [r12 + rcx*8 + 0x787f84]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "320805",
+          "ExpectedInstruction": "418B84C4847F7800",
+          "Function": "SetTmp_UA____UnitAction",
+          "Instruction": "mov eax, dword ptr [r12 + rax*8 + 0x787f84]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "38AC87",
+          "ExpectedInstruction": "45388CF2857F7800",
+          "Function": "ChangeWork",
+          "Instruction": "cmp byte ptr [r10 + rsi*8 + 0x787f85], r9b",
+          "DisplacementOffset": 4,
+          "FieldOffset": 5,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "316F1D",
+          "ExpectedInstruction": "4180BCE8877F780000",
+          "Function": "SetUACommand",
+          "Instruction": "cmp byte ptr [r8 + rbp*8 + 0x787f87], 0",
+          "DisplacementOffset": 4,
+          "FieldOffset": 7,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "38C068",
+          "ExpectedInstruction": "4180BCF4877F780000",
+          "Function": "RandomPlay",
+          "Instruction": "cmp byte ptr [r12 + rsi*8 + 0x787f87], 0",
+          "DisplacementOffset": 4,
+          "FieldOffset": 7,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "309C6C",
+          "ExpectedInstruction": "41849CC4877F7800",
+          "Function": "BATTLE_Preformula_setup",
+          "Instruction": "test byte ptr [r12 + rax*8 + 0x787f87], bl",
+          "DisplacementOffset": 4,
+          "FieldOffset": 7,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "275B53",
+          "ExpectedInstruction": "488D81DA8D7800",
+          "Function": "get_ability_address",
+          "Instruction": "lea rax, [rcx + 0x788dda]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 3674,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "30CB31",
+          "ExpectedInstruction": "4D8D88FC8D7800",
+          "Function": "ApplyPendingStatusFlags",
+          "Instruction": "lea r9, [r8 + 0x788dfc]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 3708,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "275B03",
+          "ExpectedInstruction": "488D814C8F7800",
+          "Function": "get_ability_address",
+          "Instruction": "lea rax, [rcx + 0x788f4c]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 4044,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "3206E0",
+          "ExpectedInstruction": "418A84444C8F7800",
+          "Function": "SetTmp_UA____UnitAction",
+          "Instruction": "mov al, byte ptr [r12 + rax*2 + 0x788f4c]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4044,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "275B21",
+          "ExpectedInstruction": "488D81548F7800",
+          "Function": "get_ability_address",
+          "Instruction": "lea rax, [rcx + 0x788f54]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 4052,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "2818A4",
+          "ExpectedInstruction": "418A8C78548F7800",
+          "Function": "setskilldata_common",
+          "Instruction": "mov cl, byte ptr [r8 + rdi*2 + 0x788f54]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4052,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "3205C3",
+          "ExpectedInstruction": "418A8444548F7800",
+          "Function": "SetTmp_UA____UnitAction",
+          "Instruction": "mov al, byte ptr [r12 + rax*2 + 0x788f54]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4052,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "309EC3",
+          "ExpectedInstruction": "418A8444558F7800",
+          "Function": "BATTLE_Preformula_setup",
+          "Instruction": "mov al, byte ptr [r12 + rax*2 + 0x788f55]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 4053,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "30DF77",
+          "ExpectedInstruction": "488D0D02B34700",
+          "DisplacementOffset": 3,
+          "FieldOffset": 4864,
+          "Encoding": "RipRelative",
+          "Function": "set_abilitycost_list",
+          "Instruction": "lea rcx, [rip + 0x47b302]",
+          "Review": "Bias-only pointer; indexed read subtracts 0x32C"
+        },
+        {
+          "InstructionRva": "30E5D9",
+          "ExpectedInstruction": "488D0DA0AC4700",
+          "DisplacementOffset": 3,
+          "FieldOffset": 4864,
+          "Encoding": "RipRelative",
+          "Function": "set_normability2",
+          "Instruction": "lea rcx, [rip + 0x47aca0]",
+          "Review": "Bias-only pointer; indexed read subtracts 0x32C"
+        }
+      ],
+      "PropagatedReferences": [
+        {
+          "InstructionRva": "30CE34",
+          "ExpectedInstruction": "420FB654E802",
+          "Function": "__CheckLearnAbilityOnHit",
+          "Instruction": "movzx edx, byte ptr [rax + r13*8 + 2]",
+          "OriginRvas": [
+            "30CE28"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "2780E4",
+          "ExpectedInstruction": "420FB614D9",
+          "Function": "FUN_1402780b0",
+          "Instruction": "movzx edx, byte ptr [rcx + r11*8]",
+          "OriginRvas": [
+            "2780DD"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "30CD4A",
+          "ExpectedInstruction": "F644F00320",
+          "Function": "__CheckLearnAbilityOnHit",
+          "Instruction": "test byte ptr [rax + rsi*8 + 3], 0x20",
+          "OriginRvas": [
+            "30CD40"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "392780",
+          "ExpectedInstruction": "428A14C2",
+          "Function": "FUN_140392620",
+          "Instruction": "mov dl, byte ptr [rdx + r8*8]",
+          "OriginRvas": [
+            "392776"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "30E5E3",
+          "ExpectedInstruction": "0FB69C79D4FCFFFF",
+          "Function": "set_normability2",
+          "Instruction": "movzx ebx, byte ptr [rcx + rdi*2 - 0x32c]",
+          "OriginRvas": [
+            "30E5D9"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "30DF81",
+          "ExpectedInstruction": "0FB69C71D4FCFFFF",
+          "Function": "set_abilitycost_list",
+          "Instruction": "movzx ebx, byte ptr [rcx + rsi*2 - 0x32c]",
+          "OriginRvas": [
+            "30DF77"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        }
+      ]
+    },
+    {
+      "Name": "SharedUiList",
+      "SourceRva": "1811470",
+      "OriginalBytes": 512,
+      "ExpandedBytes": 2048,
+      "ProvenanceInstructions": [
+        {
+          "InstructionRva": "286B63",
+          "ExpectedInstruction": "4C8BDF",
+          "Review": "R11 receives relocated RDI, then advances by two per output element."
+        }
+      ],
+      "VerifiedOperands": [
+        {
+          "InstructionRva": "285F2C",
+          "ExpectedInstruction": "440FB7053CB55801",
+          "Function": "SetItemUserSort",
+          "Instruction": "movzx r8d, word ptr [rip + 0x158b53c]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "2D76B0",
+          "ExpectedInstruction": "4C8D0DB99D5301",
+          "Function": "FUN_1402d7640",
+          "Instruction": "lea r9, [rip + 0x1539db9]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "33690D",
+          "ExpectedInstruction": "4C8D0D5CAB4D01",
+          "Function": "FUN_1403368c0",
+          "Instruction": "lea r9, [rip + 0x14dab5c]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "336948",
+          "ExpectedInstruction": "488D1521AB4D01",
+          "Function": "FUN_1403368c0",
+          "Instruction": "lea rdx, [rip + 0x14dab21]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "286B4C",
+          "ExpectedInstruction": "488D3D1DA95801",
+          "Function": "GetTotalAbilityList",
+          "Instruction": "lea rdi, [rip + 0x158a91d]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "336C09",
+          "ExpectedInstruction": "4C8D0D60A84D01",
+          "Function": "FUN_140336b88",
+          "Instruction": "lea r9, [rip + 0x14da860]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "336C34",
+          "ExpectedInstruction": "488D1535A84D01",
+          "Function": "FUN_140336b88",
+          "Instruction": "lea rdx, [rip + 0x14da835]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "367151",
+          "ExpectedInstruction": "488D0D18A34A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rcx, [rip + 0x14aa318]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "367205",
+          "ExpectedInstruction": "488D3564A24A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rsi, [rip + 0x14aa264]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "367236",
+          "ExpectedInstruction": "488D3533A24A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rsi, [rip + 0x14aa233]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "3672B3",
+          "ExpectedInstruction": "488D35B6A14A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rsi, [rip + 0x14aa1b6]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "367325",
+          "ExpectedInstruction": "488D0D44A14A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rcx, [rip + 0x14aa144]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36735A",
+          "ExpectedInstruction": "488D350FA14A01",
+          "Function": "FUN_140366fe0",
+          "Instruction": "lea rsi, [rip + 0x14aa10f]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "336496",
+          "ExpectedInstruction": "440FB7844770148101",
+          "Function": "FUN_140336444",
+          "Instruction": "movzx r8d, word ptr [rdi + rax*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "36EB2A",
+          "ExpectedInstruction": "4C8D3D3F294A01",
+          "Function": "town_140369898",
+          "Instruction": "lea r15, [rip + 0x14a293f]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "3366A1",
+          "ExpectedInstruction": "6641858C5F70148101",
+          "Function": "FUN_140336664",
+          "Instruction": "test word ptr [r15 + rbx*2 + 0x1811470], cx",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "335D9E",
+          "ExpectedInstruction": "470FB78C4E70148101",
+          "Function": "ItemShopMenu_Main_maybe",
+          "Instruction": "movzx r9d, word ptr [r14 + r9*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "335E77",
+          "ExpectedInstruction": "410FBF944670148101",
+          "Function": "ItemShopMenu_Main_maybe",
+          "Instruction": "movsx edx, word ptr [r14 + rax*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "336102",
+          "ExpectedInstruction": "450FB7B44E70148101",
+          "Function": "ItemShopMenu_Main_maybe",
+          "Instruction": "movzx r14d, word ptr [r14 + rcx*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "33561B",
+          "ExpectedInstruction": "488D154EBE4D01",
+          "Function": "FUN_140335604",
+          "Instruction": "lea rdx, [rip + 0x14dbe4e]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "334FF3",
+          "ExpectedInstruction": "488D3D76C44D01",
+          "Function": "FUN_140334a48",
+          "Instruction": "lea rdi, [rip + 0x14dc476]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "334BEA",
+          "ExpectedInstruction": "488D3D7FC84D01",
+          "Function": "FUN_140334a48",
+          "Instruction": "lea rdi, [rip + 0x14dc87f]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "334D27",
+          "ExpectedInstruction": "488D3D42C74D01",
+          "Function": "FUN_140334a48",
+          "Instruction": "lea rdi, [rip + 0x14dc742]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "334E1D",
+          "ExpectedInstruction": "488D3D4CC64D01",
+          "Function": "FUN_140334a48",
+          "Instruction": "lea rdi, [rip + 0x14dc64c]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36C426",
+          "ExpectedInstruction": "4C8D0D43504A01",
+          "Function": "FUN_14036c3ec",
+          "Instruction": "lea r9, [rip + 0x14a5043]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36C457",
+          "ExpectedInstruction": "4C8D0D12504A01",
+          "Function": "FUN_14036c3ec",
+          "Instruction": "lea r9, [rip + 0x14a5012]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36C47E",
+          "ExpectedInstruction": "488D0DEB4F4A01",
+          "Function": "FUN_14036c468",
+          "Instruction": "lea rcx, [rip + 0x14a4feb]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36C53E",
+          "ExpectedInstruction": "488D0D2B4F4A01",
+          "Function": "FUN_14036c49c",
+          "Instruction": "lea rcx, [rip + 0x14a4f2b]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "333AD2",
+          "ExpectedInstruction": "4C8D2597D94D01",
+          "Function": "FUN_140333974",
+          "Instruction": "lea r12, [rip + 0x14dd997]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "333BFB",
+          "ExpectedInstruction": "4C8D256ED84D01",
+          "Function": "FUN_140333974",
+          "Instruction": "lea r12, [rip + 0x14dd86e]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36B1E0",
+          "ExpectedInstruction": "488D1589624A01",
+          "Function": "FUN_14036b18c",
+          "Instruction": "lea rdx, [rip + 0x14a6289]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36B20D",
+          "ExpectedInstruction": "488D155C624A01",
+          "Function": "FUN_14036b18c",
+          "Instruction": "lea rdx, [rip + 0x14a625c]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "3332C3",
+          "ExpectedInstruction": "488D3DA6E14D01",
+          "Function": "FUN_1403331f8",
+          "Instruction": "lea rdi, [rip + 0x14de1a6]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36B450",
+          "ExpectedInstruction": "410FBF8C6F70148101",
+          "Function": "GetItemNexRowByIdx_maybe",
+          "Instruction": "movsx ecx, word ptr [r15 + rbp*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "36B600",
+          "ExpectedInstruction": "488D15695E4A01",
+          "Function": "FUN_14036b5d0",
+          "Instruction": "lea rdx, [rip + 0x14a5e69]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "28B66E",
+          "ExpectedInstruction": "488D35FB5D5801",
+          "Function": "FUN_14028b65c",
+          "Instruction": "lea rsi, [rip + 0x1585dfb]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36A93B",
+          "ExpectedInstruction": "488D0D2E6B4A01",
+          "Function": "FUN_14036a924",
+          "Instruction": "lea rcx, [rip + 0x14a6b2e]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36A973",
+          "ExpectedInstruction": "488D0DF66A4A01",
+          "Function": "FUN_14036a95c",
+          "Instruction": "lea rcx, [rip + 0x14a6af6]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36A99B",
+          "ExpectedInstruction": "488D0DCE6A4A01",
+          "Function": "GetItemCommonDataWrapper_maybe",
+          "Instruction": "lea rcx, [rip + 0x14a6ace]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36AA3F",
+          "ExpectedInstruction": "4C8D0D2A6A4A01",
+          "Function": "FUN_14036a9d8",
+          "Instruction": "lea r9, [rip + 0x14a6a2a]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36AA68",
+          "ExpectedInstruction": "4C8D0D016A4A01",
+          "Function": "FUN_14036a9d8",
+          "Instruction": "lea r9, [rip + 0x14a6a01]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36AA83",
+          "ExpectedInstruction": "488D0DE6694A01",
+          "Function": "FUN_14036a9d8",
+          "Instruction": "lea rcx, [rip + 0x14a69e6]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "36ACCF",
+          "ExpectedInstruction": "488D0D9A674A01",
+          "Function": "FUN_14036ac74",
+          "Instruction": "lea rcx, [rip + 0x14a679a]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "332C5D",
+          "ExpectedInstruction": "488D0D0CE84D01",
+          "Function": "FUN_140332c54",
+          "Instruction": "lea rcx, [rip + 0x14de80c]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "332C95",
+          "ExpectedInstruction": "488D0DD4E74D01",
+          "Function": "CallGetEqp",
+          "Instruction": "lea rcx, [rip + 0x14de7d4]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "332CDE",
+          "ExpectedInstruction": "410FB78C4070148101",
+          "Function": "GetItemDisplayData_maybe",
+          "Instruction": "movzx ecx, word ptr [r8 + rax*2 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "332D4F",
+          "ExpectedInstruction": "488D0D1AE74D01",
+          "Function": "MakeItemMenuUvClut",
+          "Instruction": "lea rcx, [rip + 0x14de71a]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "338291",
+          "ExpectedInstruction": "4C8D0DD8914D01",
+          "Function": "FUN_140338250",
+          "Instruction": "lea r9, [rip + 0x14d91d8]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "3382BA",
+          "ExpectedInstruction": "488D15AF914D01",
+          "Function": "FUN_140338250",
+          "Instruction": "lea rdx, [rip + 0x14d91af]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "285F62",
+          "ExpectedInstruction": "470FB7841170148101",
+          "Function": "SetItemUserSort",
+          "Instruction": "movzx r8d, word ptr [r9 + r10 + 0x1811470]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        }
+      ],
+      "PropagatedReferences": [
+        {
+          "InstructionRva": "286B91",
+          "ExpectedInstruction": "6641890B",
+          "Function": "GetTotalAbilityList",
+          "Instruction": "mov word ptr [r11], cx",
+          "OriginRvas": [
+            "286B4C"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "286BAF",
+          "ExpectedInstruction": "66891C4F",
+          "Function": "GetTotalAbilityList",
+          "Instruction": "mov word ptr [rdi + rcx*2], bx",
+          "OriginRvas": [
+            "286B4C"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36720C",
+          "ExpectedInstruction": "4C8BCE",
+          "Function": "FUN_140366fe0",
+          "Instruction": "mov r9, rsi",
+          "OriginRvas": [
+            "367205"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "367264",
+          "ExpectedInstruction": "4C8BCE",
+          "Function": "FUN_140366fe0",
+          "Instruction": "mov r9, rsi",
+          "OriginRvas": [
+            "367205",
+            "367236"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "367287",
+          "ExpectedInstruction": "488BCE",
+          "Function": "FUN_140366fe0",
+          "Instruction": "mov rcx, rsi",
+          "OriginRvas": [
+            "367205",
+            "367236"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "367589",
+          "ExpectedInstruction": "0FB70C4E",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movzx ecx, word ptr [rsi + rcx*2]",
+          "OriginRvas": [
+            "367205",
+            "367236",
+            "3672B3",
+            "36735A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "3672E1",
+          "ExpectedInstruction": "420FBF0C71",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movsx ecx, word ptr [rcx + r14*2]",
+          "OriginRvas": [
+            "367151"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36732C",
+          "ExpectedInstruction": "440FB70441",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movzx r8d, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "367325"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "367382",
+          "ExpectedInstruction": "0FB71446",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movzx edx, word ptr [rsi + rax*2]",
+          "OriginRvas": [
+            "36735A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36748B",
+          "ExpectedInstruction": "0FB71446",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movzx edx, word ptr [rsi + rax*2]",
+          "OriginRvas": [
+            "36735A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "3674A6",
+          "ExpectedInstruction": "440FB70456",
+          "Function": "FUN_140366fe0",
+          "Instruction": "movzx r8d, word ptr [rsi + rdx*2]",
+          "OriginRvas": [
+            "36735A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36EB47",
+          "ExpectedInstruction": "4D8BCF",
+          "Function": "town_140369898",
+          "Instruction": "mov r9, r15",
+          "OriginRvas": [
+            "36EB2A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36EB64",
+          "ExpectedInstruction": "410FB70C77",
+          "Function": "town_140369898",
+          "Instruction": "movzx ecx, word ptr [r15 + rsi*2]",
+          "OriginRvas": [
+            "36EB2A"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "335625",
+          "ExpectedInstruction": "0FBF145A",
+          "Function": "FUN_140335604",
+          "Instruction": "movsx edx, word ptr [rdx + rbx*2]",
+          "OriginRvas": [
+            "33561B"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334FFA",
+          "ExpectedInstruction": "0FBF0C47",
+          "Function": "FUN_140334a48",
+          "Instruction": "movsx ecx, word ptr [rdi + rax*2]",
+          "OriginRvas": [
+            "334FF3"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334BF1",
+          "ExpectedInstruction": "0FBF0C47",
+          "Function": "FUN_140334a48",
+          "Instruction": "movsx ecx, word ptr [rdi + rax*2]",
+          "OriginRvas": [
+            "334BEA"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334D32",
+          "ExpectedInstruction": "420FB70C77",
+          "Function": "FUN_140334a48",
+          "Instruction": "movzx ecx, word ptr [rdi + r14*2]",
+          "OriginRvas": [
+            "334D27"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334D3C",
+          "ExpectedInstruction": "420FB70C77",
+          "Function": "FUN_140334a48",
+          "Instruction": "movzx ecx, word ptr [rdi + r14*2]",
+          "OriginRvas": [
+            "334D27"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334E3F",
+          "ExpectedInstruction": "4C8BCF",
+          "Function": "FUN_140334a48",
+          "Instruction": "mov r9, rdi",
+          "OriginRvas": [
+            "334E1D"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334E68",
+          "ExpectedInstruction": "488BD7",
+          "Function": "FUN_140334a48",
+          "Instruction": "mov rdx, rdi",
+          "OriginRvas": [
+            "334E1D"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "334ED0",
+          "ExpectedInstruction": "488BD7",
+          "Function": "FUN_140334a48",
+          "Instruction": "mov rdx, rdi",
+          "OriginRvas": [
+            "334E1D"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36C485",
+          "ExpectedInstruction": "0FB70C41",
+          "Function": "FUN_14036c468",
+          "Instruction": "movzx ecx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "36C47E"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333AE8",
+          "ExpectedInstruction": "4D8BCC",
+          "Function": "FUN_140333974",
+          "Instruction": "mov r9, r12",
+          "OriginRvas": [
+            "333AD2"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333B32",
+          "ExpectedInstruction": "4D8BCC",
+          "Function": "FUN_140333974",
+          "Instruction": "mov r9, r12",
+          "OriginRvas": [
+            "333AD2"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333B4A",
+          "ExpectedInstruction": "498BCC",
+          "Function": "FUN_140333974",
+          "Instruction": "mov rcx, r12",
+          "OriginRvas": [
+            "333AD2"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333E4A",
+          "ExpectedInstruction": "410FB70C54",
+          "Function": "FUN_140333974",
+          "Instruction": "movzx ecx, word ptr [r12 + rdx*2]",
+          "OriginRvas": [
+            "333AD2",
+            "333BFB"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333C0F",
+          "ExpectedInstruction": "410FBF3C74",
+          "Function": "FUN_140333974",
+          "Instruction": "movsx edi, word ptr [r12 + rsi*2]",
+          "OriginRvas": [
+            "333BFB"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333C27",
+          "ExpectedInstruction": "410FB73C74",
+          "Function": "FUN_140333974",
+          "Instruction": "movzx edi, word ptr [r12 + rsi*2]",
+          "OriginRvas": [
+            "333BFB"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "333C5D",
+          "ExpectedInstruction": "6641850C74",
+          "Function": "FUN_140333974",
+          "Instruction": "test word ptr [r12 + rsi*2], cx",
+          "OriginRvas": [
+            "333BFB"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "3332DC",
+          "ExpectedInstruction": "66443927",
+          "Function": "FUN_1403331f8",
+          "Instruction": "cmp word ptr [rdi], r12w",
+          "OriginRvas": [
+            "3332C3"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "3332E2",
+          "ExpectedInstruction": "0FBF07",
+          "Function": "FUN_1403331f8",
+          "Instruction": "movsx eax, word ptr [rdi]",
+          "OriginRvas": [
+            "3332C3"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "28B67B",
+          "ExpectedInstruction": "0FBF045E",
+          "Function": "FUN_14028b65c",
+          "Instruction": "movsx eax, word ptr [rsi + rbx*2]",
+          "OriginRvas": [
+            "28B66E"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "28B686",
+          "ExpectedInstruction": "0FB70C5E",
+          "Function": "FUN_14028b65c",
+          "Instruction": "movzx ecx, word ptr [rsi + rbx*2]",
+          "OriginRvas": [
+            "28B66E"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "28B692",
+          "ExpectedInstruction": "0FB70C5E",
+          "Function": "FUN_14028b65c",
+          "Instruction": "movzx ecx, word ptr [rsi + rbx*2]",
+          "OriginRvas": [
+            "28B66E"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36A942",
+          "ExpectedInstruction": "0FB70C41",
+          "Function": "FUN_14036a924",
+          "Instruction": "movzx ecx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "36A93B"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36A97A",
+          "ExpectedInstruction": "0FB70C41",
+          "Function": "FUN_14036a95c",
+          "Instruction": "movzx ecx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "36A973"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36A9A2",
+          "ExpectedInstruction": "440FB70441",
+          "Function": "GetItemCommonDataWrapper_maybe",
+          "Instruction": "movzx r8d, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "36A99B"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "36ACDD",
+          "ExpectedInstruction": "0FB70441",
+          "Function": "FUN_14036ac74",
+          "Instruction": "movzx eax, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "36ACCF"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "332C64",
+          "ExpectedInstruction": "0FB71C41",
+          "Function": "FUN_140332c54",
+          "Instruction": "movzx ebx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "332C5D"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "332C9C",
+          "ExpectedInstruction": "0FB71C41",
+          "Function": "CallGetEqp",
+          "Instruction": "movzx ebx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "332C95"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "332D56",
+          "ExpectedInstruction": "0FBF1441",
+          "Function": "MakeItemMenuUvClut",
+          "Instruction": "movsx edx, word ptr [rcx + rax*2]",
+          "OriginRvas": [
+            "332D4F"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        }
+      ]
+    },
+    {
+      "Name": "AbilityVisual",
+      "SourceRva": "672DA0",
+      "OriginalBytes": 1364,
+      "ExpandedBytes": 3072,
+      "ProvenanceInstructions": [],
+      "VerifiedOperands": [
+        {
+          "InstructionRva": "206C4D",
+          "ExpectedInstruction": "420FB68C12A02D6700",
+          "Function": "Battle_ActionCastStartMode",
+          "Instruction": "movzx ecx, byte ptr [rdx + r10 + 0x672da0]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "206F18",
+          "ExpectedInstruction": "488D0581BE4600",
+          "Function": "actionCastStartProcs",
+          "Instruction": "lea rax, [rip + 0x46be81]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "2062CB",
+          "ExpectedInstruction": "488D05CECA4600",
+          "Function": "StartWeaponEffectAndAnimation_maybe",
+          "Instruction": "lea rax, [rip + 0x46cace]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 0,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "26993F",
+          "ExpectedInstruction": "0FB6840AA02D6700",
+          "Function": "requestCast1Animation",
+          "Instruction": "movzx eax, byte ptr [rdx + rcx + 0x672da0]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 0,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "20CE39",
+          "ExpectedInstruction": "488D05615F4600",
+          "Function": "actionExecuteProcs",
+          "Instruction": "lea rax, [rip + 0x465f61]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 1,
+          "Encoding": "RipRelative"
+        },
+        {
+          "InstructionRva": "2699D6",
+          "ExpectedInstruction": "0FB68411A12D6700",
+          "Function": "requestThrowAnimation",
+          "Instruction": "movzx eax, byte ptr [rcx + rdx + 0x672da1]",
+          "DisplacementOffset": 4,
+          "FieldOffset": 1,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "2127F6",
+          "ExpectedInstruction": "460FB68C10A12D6700",
+          "Function": "battle",
+          "Instruction": "movzx r9d, byte ptr [rax + r10 + 0x672da1]",
+          "DisplacementOffset": 5,
+          "FieldOffset": 1,
+          "Encoding": "ImageRelativeIndexed"
+        },
+        {
+          "InstructionRva": "205C80",
+          "ExpectedInstruction": "488D051BD14600",
+          "Function": "__Battle_ActionPhaseEndMode",
+          "Instruction": "lea rax, [rip + 0x46d11b]",
+          "DisplacementOffset": 3,
+          "FieldOffset": 2,
+          "Encoding": "RipRelative"
+        }
+      ],
+      "PropagatedReferences": [
+        {
+          "InstructionRva": "206F1F",
+          "ExpectedInstruction": "803C0200",
+          "Function": "actionCastStartProcs",
+          "Instruction": "cmp byte ptr [rdx + rax], 0",
+          "OriginRvas": [
+            "206F18"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "2062D2",
+          "ExpectedInstruction": "440FB61C01",
+          "Function": "StartWeaponEffectAndAnimation_maybe",
+          "Instruction": "movzx r11d, byte ptr [rcx + rax]",
+          "OriginRvas": [
+            "2062CB"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "20CE40",
+          "ExpectedInstruction": "44383401",
+          "Function": "actionExecuteProcs",
+          "Instruction": "cmp byte ptr [rcx + rax], r14b",
+          "OriginRvas": [
+            "20CE39"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        },
+        {
+          "InstructionRva": "205C87",
+          "ExpectedInstruction": "0FB61C01",
+          "Function": "__Battle_ActionPhaseEndMode",
+          "Instruction": "movzx ebx, byte ptr [rcx + rax]",
+          "OriginRvas": [
+            "205C80"
+          ],
+          "Review": "ASM/control-flow provenance: relocated base retained through indexed access, register copy, or native branch join; not a patch site."
+        }
+      ]
+    }
+  ],
+  "ReviewedFor": "FiveActionVenomTest",
+  "InstallationRequires": "Hash-locked host, native-context bridge, all menu/shop/combat/visual/save bindings; NOT a general arbitrary-content expansion.",
+  "Installable": true
+}

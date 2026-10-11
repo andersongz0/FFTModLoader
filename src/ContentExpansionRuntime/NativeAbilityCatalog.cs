@@ -20,6 +20,19 @@ public static class NativeAbilityCatalog
     public static byte[] BuildAddress(long original, long state) => Build(original, state, true);
     public static byte[] BuildSecondary(long original, long state) => Build(original, state, false);
 
+    public static byte[] BuildRegisteredEffectClassification(long original,long state)
+    {
+        if(original<=0 || state<=0)throw new ArgumentOutOfRangeException(nameof(state));
+        var c=new Code();
+        c.Emit("81 F9 00 04 00 00");c.Branch(0x83,"original");
+        c.Emit("48 B8");c.Pointer(state);
+        c.Emit("80 38 01");c.Branch(0x85,"original");
+        c.Emit("80 BC 08");c.Int(RegisteredOffset);c.Emit("01");c.Branch(0x85,"original");
+        c.Emit("31 C0 C3");
+        c.Label("original");c.Emit("FF 25 00 00 00 00");c.Pointer(original);
+        return c.Finish();
+    }
+
     /// <summary>Only the eleven registered consumable actions are not RSM.
     /// The original effect classifier indexes its legacy table without a bound.</summary>
     public static byte[] BuildConsumableEffectClassification(long original)

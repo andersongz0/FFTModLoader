@@ -14,6 +14,7 @@ public sealed unsafe class CompiledNativeSaveHooks
     private readonly ThreadLocal<Dictionary<long, object>> _pending = new(() => []);
     private volatile bool _active;
     private NativeContextBridge? _bridge;
+    private LoaderNativeRoutes? _routes;
     [Function(CallingConventions.Microsoft)]
     private delegate long Native(long a, long b, long c, long d);
 
@@ -23,16 +24,22 @@ public sealed unsafe class CompiledNativeSaveHooks
         _active=false;
         foreach(var hook in _hooks.AsEnumerable().Reverse())if(hook.IsHookActivated)hook.Disable();
     }
-    public void Install(IReloadedHooks hooks, NativeContextBridge bridge, nint imageBase, string executablePath)
+    public void Install(IReloadedHooks hooks, NativeContextBridge bridge, nint imageBase, string executablePath,
+        LoaderNativeRoutes? routes=null)
     {
-        if (_hooks.Count != 0) throw new InvalidOperationException("Save hooks already created.");
+        if (_hooks.Count != 0 || _bridge is not null) throw new InvalidOperationException("Save hooks already created.");
         _events.RequireReadyBindings();
         using (var input = File.OpenRead(executablePath))
             if (Convert.ToHexString(SHA256.HashData(input)) != ImageHash)
                 throw new NotSupportedException("Unsupported game executable; no save hooks installed.");
-        Guard(imageBase + 0x32B94, "488BC448895808488968104889701848");
-        Guard(imageBase + 0x32E60, "48895C24084889742410574883EC2049");
-        Guard(imageBase + 0x33DF0, "4053555657415641574883EC78488B05");
+        _routes=routes;
+        if(routes is null)
+        {
+            Guard(imageBase + 0x32B94, "488BC448895808488968104889701848");
+            Guard(imageBase + 0x32E60, "48895C24084889742410574883EC2049");
+            Guard(imageBase + 0x33DF0, "4053555657415641574883EC78488B05");
+        }
+        else foreach(int rva in new[]{0x32B94,0x32E60,0x33DF0})routes.Guard(rva);
         _bridge = bridge;
         Bind(hooks, bridge, imageBase + 0x32B94, 1, Queue);
         Bind(hooks, bridge, imageBase + 0x32E60, 0, Write);
@@ -54,6 +61,12 @@ public sealed unsafe class CompiledNativeSaveHooks
     private void Bind(IReloadedHooks hooks, NativeContextBridge bridge, nint address, uint stackArguments,
         NativeContextBridge.Observer observer)
     {
+        if(_routes is not null)
+        {
+            // Address belongs to the supplied image (fixtures are not the process image).
+            _routes.ObserveAddress((long)address,stackArguments,observer,_events.ReportFailure,true);
+            return;
+        }
         var hook = hooks.CreateHook<Native>((void*)bridge.ReserveAddress(), (long)address);
         // These three observers never call game helpers. The native owner is
         // blocked until buffer capture/publication completes on a normal stack.

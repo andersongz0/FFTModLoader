@@ -2,7 +2,7 @@
   "ModId": "fftmodloader.contentexpansion",
   "ModName": "FFTModLoader Content Expansion",
   "ModAuthor": "ZeroDS",
-  "ModVersion": "0.1.0-rc.1",
+  "ModVersion": "0.1.1",
   "ModDescription": "Loader-owned items, abilities, formulas, inventory, shops, saves, menus, AI and native expansion infrastructure. Gameplay activates only for a consuming mod.",
   "ModDll": "FFTModLoader.ContentExpansion.Module.dll",
   "CanUnload": false,

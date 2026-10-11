@@ -15,8 +15,19 @@ static class Program
         var config = DispatchProxy.Create<IModConfigV1, ConfigProxy>();
         var provider = new Provider();
         provider.StartEx(api, config);
-        Check(provider.GetTypes().SequenceEqual(new[] { typeof(IContentExpansion) }), "API exported for shared mod contexts");
+        Check(provider.GetTypes().SequenceEqual(new[] { typeof(IContentExpansion), typeof(IExpandedContentRegistry), typeof(IBestialWarriorExpansion) }), "APIs exported for shared mod contexts; existing Chemist identity preserved");
         Check(state.Controllers[typeof(IContentExpansion)] is IContentExpansion { ContractVersion: 1 }, "loader registers service without activating gameplay");
+        Check(state.Controllers[typeof(IExpandedContentRegistry)] is IExpandedContentRegistry { RegistryVersion: 1 }, "new content registry belongs to loader service");
+        Check(ReferenceEquals(state.Controllers[typeof(IContentExpansion)],state.Controllers[typeof(IExpandedContentRegistry)]), "one shared provider owns both contracts");
+        var profile=serviceType().GetMethod("Profile",BindingFlags.Static|BindingFlags.NonPublic)!;
+        string key=(string)profile.Invoke(null,null)!;
+        using(var identity=System.Security.Principal.WindowsIdentity.GetCurrent())
+        {
+            string expected=FFTModLoader.ContentExpansion.SaveProfileIdentity.Resolve(null,identity.User?.Value);
+            Check(key==expected && key==(string)profile.Invoke(null,null)!,"production provider uses a stable local Windows profile without Steam loaded");
+        }
+        try { ((IExpandedContentRegistry)state.Controllers[typeof(IExpandedContentRegistry)]).RegisterContent(Path.Combine(Path.GetTempPath(),"nonexistent-bestial-fixture")); throw new Exception("Missing ID registry accepted"); }
+        catch (InvalidDataException) { Check(true,"incomplete new content rejected before native access"); }
         Check(!provider.CanUnload() && !provider.CanSuspend(), "native service lifetime retained");
         var service = (IContentExpansion)state.Controllers[typeof(IContentExpansion)];
         try { service.ActivateReworkedChemist(Path.Combine(Path.GetTempPath(), "nonexistent-chemist-fixture")); throw new Exception("Incomplete content accepted"); }
@@ -33,6 +44,7 @@ static class Program
         new Consumer().StartEx(api, config); state.Initialized?.Invoke();
         Check(state.Messages.Any(x => x.Contains("Unsupported ContentExpansion")), "unsupported API version rejected");
     }
+    private static Type serviceType()=>typeof(Provider).Assembly.GetType("FFTModLoader.ContentExpansion.Module.ContentExpansionService",throwOnError:true)!;
 }
 public class Capture : IContentExpansion
 {

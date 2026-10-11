@@ -8,10 +8,11 @@ using Reloaded.Mod.Interfaces;
 using Reloaded.Mod.Interfaces.Internal;
 using GenericJobs.Configuration;
 using GenericJobs.Template.Configuration;
+using FFTModLoader.ContentExpansion.Api;
 
 namespace GenericJobs.Template
 {
-    public class Startup : IMod
+    public class Startup : IMod, IExports
     {
         /// <summary>
         /// Used for writing text to the Reloaded log.
@@ -75,7 +76,9 @@ namespace GenericJobs.Template
                 Owner = this,
                 Configuration = _configuration,
             });
+            _modLoader.AddOrReplaceController<IExpandedJobVisuals>(this,(Mod)_mod);
         }
+        public Type[] GetTypes()=>[typeof(IExpandedJobVisuals)];
 
         private void OnConfigurationUpdated(IConfigurable obj)
         {

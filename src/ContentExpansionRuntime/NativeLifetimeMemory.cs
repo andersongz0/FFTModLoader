@@ -68,6 +68,38 @@ internal sealed class NativeLifetimeMemory
         if(!RtlAddFunctionTable((nint)(Address+table),1,(ulong)Address))
             throw new Win32Exception(Marshal.GetLastWin32Error(),"Cannot register AI eligibility unwind frame.");
     }
+    public void ExecutableWithActionCaptionFrame(int end)
+    {
+        if(end<=0||end>Length-64)throw new InvalidDataException("Invalid action-caption leaf.");
+        byte[] code=CheckedNativeRead.Read(Address,end);
+        int begin=code.AsSpan().IndexOf(Convert.FromHexString("41504151"));
+        int epilogue=code.AsSpan().IndexOf(Convert.FromHexString("41594158"));
+        if(begin<0||epilogue<=begin+4)throw new InvalidDataException("Action-caption frame layout differs.");
+        int table=Length-64,info=Length-48;
+        Write(table,[..BitConverter.GetBytes(begin),..BitConverter.GetBytes(epilogue+4),..BitConverter.GetBytes(info)]);
+        // The only stack frame is the bounded scan: two volatile alloc8
+        // pushes. Bounds/fallback and the restored tail jump are frameless.
+        Write(info,[1,4,2,0,4,2,2,2]);
+        Executable();
+        if(!RtlAddFunctionTable((nint)(Address+table),1,(ulong)Address))
+            throw new Win32Exception(Marshal.GetLastWin32Error(),"Cannot register action-caption unwind frame.");
+    }
+    public void ExecutableWithCommandArrayFrame(int end)
+    {
+        if(end<=0 || end>Length-64)throw new InvalidDataException("Invalid expanded command leaf.");
+        byte[] code=CheckedNativeRead.Read(Address,end);
+        int begin=code.AsSpan().IndexOf(Convert.FromHexString("4150415141524153"));
+        int epilogue=code.AsSpan().IndexOf(Convert.FromHexString("415B415A41594158C3"));
+        if(begin<0 || epilogue<=begin+8)throw new InvalidDataException("Expanded command frame layout differs.");
+        int table=Length-64,info=Length-48;
+        Write(table,[..BitConverter.GetBytes(begin),..BitConverter.GetBytes(epilogue+9),..BitConverter.GetBytes(info)]);
+        // Four volatile pushes R8/R9/R10/R11, each represented as alloc8.
+        // Bounds/fallback before and after this range are frameless leaves.
+        Write(info,[1,8,4,0,8,2,6,2,4,2,2,2]);
+        Executable();
+        if(!RtlAddFunctionTable((nint)(Address+table),1,(ulong)Address))
+            throw new Win32Exception(Marshal.GetLastWin32Error(),"Cannot register expanded command unwind frame.");
+    }
     public static void WriteProtected(long address,byte[] data)
     {
         _=CheckedNativeRead.Read(address,data.Length);

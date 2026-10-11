@@ -13,12 +13,16 @@ public sealed class Startup : IMod, IExports
         var loader = (IModLoader)api;
         IReloadedHooks? hooks = null;
         loader.GetController<IReloadedHooks>()?.TryGetTarget(out hooks);
+        IExpandedJobVisuals? visuals=null;
+        loader.GetController<IExpandedJobVisuals>()?.TryGetTarget(out visuals);
         _service = new ContentExpansionService(hooks,
-            loader.GetDirectoryForModId(config.ModId), (ILogger)loader.GetLogger());
+            loader.GetDirectoryForModId(config.ModId), (ILogger)loader.GetLogger(),visuals);
         loader.AddOrReplaceController<IContentExpansion>(this, _service);
+        loader.AddOrReplaceController<IExpandedContentRegistry>(this, _service);
+        loader.AddOrReplaceController<IBestialWarriorExpansion>(this,_service);
     }
     // Explicit export ensures the same controller interface identity across mod load contexts.
-    public Type[] GetTypes() => [typeof(IContentExpansion)];
+    public Type[] GetTypes() => [typeof(IContentExpansion), typeof(IExpandedContentRegistry),typeof(IBestialWarriorExpansion)];
     public bool CanUnload() => false;
     public bool CanSuspend() => false;
     public void Suspend() { }

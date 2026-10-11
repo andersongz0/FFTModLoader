@@ -7,6 +7,7 @@ if ($LASTEXITCODE -ne 0) { throw 'CMake configuration failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Launcher build failed.' }
 & (Join-Path $PSScriptRoot "build/$Configuration/RuntimeLogRelayTests.exe")
 if ($LASTEXITCODE -ne 0) { throw 'Console regression tests failed.' }
+& (Join-Path $PSScriptRoot 'tests/runtime_log_relay_live.ps1') -RelayExecutable (Join-Path $PSScriptRoot "build/$Configuration/RuntimeLogRelayTests.exe")
 & (Join-Path $PSScriptRoot "build/$Configuration/ModLoadOrderTests.exe")
 if ($LASTEXITCODE -ne 0) { throw 'Load-order tests failed.' }
 & dotnet build src/JobExpansionRuntime/GenericJobs.csproj -c $Configuration --nologo

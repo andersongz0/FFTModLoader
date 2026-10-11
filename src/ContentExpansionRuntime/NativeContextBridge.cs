@@ -53,7 +53,7 @@ public sealed unsafe class NativeContextBridge
     private readonly BeginCall _beginCall;
     private readonly WaitCall _waitCall;
     [ThreadStatic] private static NativeContextBridge? _gameplayOwner;
-    private readonly Observer?[] _roots = new Observer?[64];
+    private readonly Observer?[] _roots;
     private readonly object _workerGate=new();
     private Thread? _saveWorker;
     private Thread[]? _gameplayWorkers;
@@ -68,6 +68,10 @@ public sealed unsafe class NativeContextBridge
         _module = NativeLibrary.Load(absoluteLibraryPath);
         // Never unload: active detours and Windows unwind records must outlive this host.
         _address = Export<Address>("GetBridgeAddress");
+        uint capacity=NativeLibrary.TryGetExport(_module,"GetBridgeCapacity",out var capacityExport)
+            ? Marshal.GetDelegateForFunctionPointer<Version>(capacityExport)():64;
+        if(capacity is <64 or >256)throw new NotSupportedException("Invalid native bridge capacity.");
+        _roots=new Observer?[capacity];
         _configure = Export<Configure>("ConfigureBridge");
         if (Export<Version>("GetBridgeVersion")() != 5) throw new NotSupportedException("Native bridge v5 required (CLR-owned gameplay/save workers and fiber-local helper transport).");
         _saveDispatch=Export<SaveDispatch>("SetBridgeSaveDispatch");
@@ -81,7 +85,7 @@ public sealed unsafe class NativeContextBridge
     }
     public nint ReserveAddress()
     {
-        if (_next >= 64) throw new InvalidOperationException("Native bridge capacity exhausted.");
+        if (_next >= _roots.Length) throw new InvalidOperationException("Native bridge capacity exhausted.");
         return _address(_next);
     }
     public void EnableDiagnosticCapture(string directory)
@@ -156,7 +160,7 @@ public sealed unsafe class NativeContextBridge
     {
         try
         {
-            if(index>=64 || frame==0 || token==0)Environment.FailFast("Invalid native gameplay request.");
+            if(index>=_roots.Length || frame==0 || token==0)Environment.FailFast("Invalid native gameplay request.");
             var observer=Volatile.Read(ref _roots[index]);
             if(observer is null)Environment.FailFast("Unbound native gameplay observer.");
             observer((Frame*)frame);
@@ -181,7 +185,7 @@ public sealed unsafe class NativeContextBridge
         {
             try
             {
-                if(index>=64 || address==0)Environment.FailFast("Invalid native save request.");
+                if(index>=_roots.Length || address==0)Environment.FailFast("Invalid native save request.");
                 var observer=Volatile.Read(ref _roots[index]);
                 if(observer is null)Environment.FailFast("Unbound native save observer.");
                 observer((Frame*)address); // Ordinary managed call, NOT a reverse P/Invoke.

@@ -13,5 +13,8 @@
     <PackageReference Include="Reloaded.Mod.Interfaces" Version="2.4.0" ExcludeAssets="runtime" />
     <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" />
   </ItemGroup>
-  <ItemGroup><None Update="ModConfig.json" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup>
+    <None Update="ModConfig.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="playable-relocation-plan.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
