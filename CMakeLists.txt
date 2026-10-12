@@ -26,6 +26,9 @@ add_executable(FFTModLoader
 )
 add_executable(RuntimeLogRelayTests EXCLUDE_FROM_ALL tests/runtime_log_relay.cpp)
 add_executable(ModLoadOrderTests EXCLUDE_FROM_ALL tests/mod_load_order.cpp)
+add_library(SteamApiTestFixture SHARED EXCLUDE_FROM_ALL tests/steam_api_fixture.cpp)
+set_target_properties(SteamApiTestFixture PROPERTIES OUTPUT_NAME steam_api64
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/steam-test-fixture")
 
 target_include_directories(FFTModLoader PRIVATE
     src/Launcher

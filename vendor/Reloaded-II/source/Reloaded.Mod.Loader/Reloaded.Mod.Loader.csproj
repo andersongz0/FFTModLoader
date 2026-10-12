@@ -47,8 +47,6 @@
     <RobustLinkAssemblies Include="Reloaded.Messaging" />
     <RobustLinkAssemblies Include="Reloaded.Messaging.Interfaces" />
     <RobustLinkAssemblies Include="Reloaded.Memory.Buffers" />
-    <RobustLinkAssemblies Include="Indieteur.SAMAPI" />
-    <RobustLinkAssemblies Include="Indieteur.VDFAPI" />
     <RobustLinkAssemblies Include="LiteNetLib" />
     <RobustLinkAssemblies Include="Reloaded.Hooks" />
     <RobustLinkAssemblies Include="Reloaded.Hooks.Definitions" />
@@ -100,10 +98,15 @@
   <ItemGroup>
     <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.39" PrivateAssets="All" />
     <PackageReference Include="Colorful.Console" Version="1.2.2-reloaded" />
-    <PackageReference Include="Indieteur.SteamAppsManAndVDFAPI" Version="1.0.5" />
     <PackageReference Include="McMaster.NETCore.Plugins" Version="2.0.0" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="9.0.11" />
     <PackageReference Include="Reloaded.SharedLib.Hooks" Version="1.9.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Original third-party source is retained for attribution, but these
+         Steam interception/client-discovery routes are not in FFTModLoader. -->
+    <Compile Remove="Utilities\Steam\SteamHook.cs" />
+    <Compile Remove="Utilities\Steam\SteamAppId.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DelayInjectHooks.json">

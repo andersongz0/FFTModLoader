@@ -1,5 +1,4 @@
 global using Colorful;
-global using Indieteur.SAMAPI;
 global using McMaster.NETCore.Plugins.Loader;
 global using Reloaded.Hooks.Definitions;
 global using Reloaded.Mod.Interfaces;

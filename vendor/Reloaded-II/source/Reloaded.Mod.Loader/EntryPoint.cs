@@ -21,7 +21,6 @@ public static class EntryPoint
     private static ReloadedMappedFile _reloadedMappedFile;
     private static DelayInjector _delayInjector;
     private static Process _process = Process.GetCurrentProcess();
-    private static SteamHook _steamHook;
     private static ProcessExitHook _exitHook;
     private static ProcessCrashHook _crashHook;
     private static EntryPointParameters _parameters;
@@ -133,11 +132,13 @@ public static class EntryPoint
         _crashHook = new ProcessCrashHook(&HandleCrash, hooks);
 
         // Hook Console Close
-        if (_loader.Console != null)
+        if (_loader?.Console != null)
             _loader.Console.OnConsoleClose += SaveAndFlushLog;
 
-        // Hook Steam
-        _steamHook = new SteamHook(hooks, _loader.Logger, Path.GetDirectoryName(_process.MainModule.FileName));
+        // FFTModLoader must not change the game's platform API or require a
+        // Steam installation. Keep exit/crash diagnostics, but leave SteamAPI
+        // exports, client discovery and steam_appid.txt entirely untouched.
+        Logger?.LogWriteLineAsync("[Platform] SteamAPI left unchanged; no Steam client lookup or app-id writes.");
     }
 
     private static void LoadMods(IReloadedHooks hooks)

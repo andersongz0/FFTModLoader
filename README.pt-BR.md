@@ -4,6 +4,8 @@
 
 Autor: **ZeroDS**
 
+**0.11.8-rc.1** é uma pré-release de teste. O runtime integrado não procura a Steam, não intercepta funções da SteamAPI e não grava `steam_appid.txt`. Os requisitos próprios do jogo permanecem inalterados.
+
 Carrega mods compatíveis em **FINAL FANTASY TACTICS - The Ivalice Chronicles (Enhanced)**. Inclui o runtime, o gerenciamento de dependências e as expansões para novas classes, itens, habilidades e sistemas de batalha. O console mostra o conteúdo carregado por cada mod.
 
 **Dark Knight e Onion Knight** estão incluídas como classes genéricas. Compatível com **Generic Knights** e **Reworked Chemist**; esses mods são baixados separadamente em seus próprios repositórios.
@@ -17,7 +19,7 @@ Carrega mods compatíveis em **FINAL FANTASY TACTICS - The Ivalice Chronicles (E
 ## Guia de Instalação do FFTModLoader
 
 1. Feche o jogo e, se estiver em execução, o loader.
-2. Baixe **FFTModLoader-0.11.7.zip** em [Releases](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.7), não **Source code**.
+2. Baixe **FFTModLoader-0.11.8-rc.1.zip** em [Releases](https://github.com/andersongz0/FFTModLoader/releases/tag/v0.11.8-rc.1), não **Source code**.
 3. Extraia o ZIP fora da pasta do jogo.
 4. Dê dois cliques em **Install.cmd** e escolha seu idioma.
 5. Confirme a pasta do jogo encontrada. Se ela não for encontrada, selecione a pasta que contém **FFT_enhanced.exe**.
